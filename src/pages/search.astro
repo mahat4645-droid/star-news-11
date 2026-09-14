@@ -1,0 +1,50 @@
+---
+import { Layout } from '@theme';
+import { t } from '../lib/i18n';
+import { url } from '../lib/url';
+---
+
+<Layout title={t('search')} description={t('searchTitle')}>
+  <div class="container">
+    <header class="page-head">
+      <p class="page-head__eyebrow">{t('search')}</p>
+      <h1 class="page-head__title">{t('searchTitle')}</h1>
+    </header>
+    <div class="search-wrap">
+      <div id="search" data-base={url()} data-placeholder={t('searchPlaceholder')} data-needs-build={t('searchNeedsBuild')}></div>
+    </div>
+  </div>
+
+  <!-- Pagefind: a static search index generated at build time. No server, no API key. -->
+  <script is:inline>
+    (() => {
+      const el = document.getElementById('search');
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = el.dataset.base + 'pagefind/pagefind-ui.css';
+      document.head.append(css);
+      const js = document.createElement('script');
+      js.src = el.dataset.base + 'pagefind/pagefind-ui.js';
+      js.onload = () => {
+        const ui = new PagefindUI({
+          element: '#search',
+          bundlePath: el.dataset.base + 'pagefind/',
+          baseUrl: el.dataset.base,
+          showSubResults: true,
+          showImages: true,
+          autofocus: true,
+          translations: { placeholder: el.dataset.placeholder },
+        });
+        const q = new URLSearchParams(location.search).get('q');
+        if (q) ui.triggerSearch(q);
+      };
+      js.onerror = () => {
+        const p = document.createElement('p');
+        p.className = 'empty';
+        p.textContent = el.dataset.needsBuild;
+        el.replaceChildren(p);
+      };
+      document.head.append(js);
+    })();
+  </script>
+</Layout>

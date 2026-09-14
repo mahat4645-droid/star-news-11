@@ -1,0 +1,17 @@
+---
+// The agency's credit line at the very bottom of every page, on every client site and theme.
+// Text and number: src/data/agency.json (not editable from the admin panel).
+import agency from '../data/agency.json';
+import Icon from './Icon.astro';
+import { lang } from '../lib/i18n';
+
+const text = agency.text[lang as keyof typeof agency.text] ?? agency.text.hi;
+const href = `https://wa.me/${agency.whatsapp}?text=${encodeURIComponent(agency.message)}`;
+---
+
+<div class="agency-credit">
+  <a href={href} target="_blank" rel="noopener">
+    <Icon name="whatsapp" size={15} />
+    <span>{text}: <b>{agency.phone}</b></span>
+  </a>
+</div>

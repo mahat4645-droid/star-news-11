@@ -1,0 +1,14 @@
+/* Theme: Suryoday — colours and fonts. Layout choices are in config.ts. */
+:root {
+  --theme-accent: #ea580c;
+  --font-head: 'Khand', var(--font-fallback);
+  --font-title: 'Khand', var(--font-fallback);
+  --font-body: 'Hind', var(--font-fallback);
+  --font-ui: 'Hind', var(--font-fallback);
+  --head-weight: 700;
+  --title-weight: 600;
+  --bg: #ffffff;
+}
+
+.card__title { font-size: 1.14rem; line-height: 1.35; }
+.sm-bh__title { letter-spacing: 0.01em; }

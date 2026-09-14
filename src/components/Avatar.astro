@@ -1,0 +1,23 @@
+---
+import { Image } from 'astro:assets';
+import { initials, type Author } from '../lib/content';
+
+interface Props {
+  author: Author;
+  size?: number;
+}
+
+const { author, size = 44 } = Astro.props;
+---
+
+<span class="avatar" style={`--size:${size}px`} aria-hidden="true">
+  {
+    author.avatar?.kind === 'local' ? (
+      <Image src={author.avatar.src} alt="" width={size * 2} />
+    ) : author.avatar ? (
+      <img src={author.avatar.src} alt="" width={size} height={size} loading="lazy" decoding="async" />
+    ) : (
+      <span>{initials(author.name)}</span>
+    )
+  }
+</span>

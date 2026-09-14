@@ -1,0 +1,52 @@
+---
+import Icon from '../Icon.astro';
+import { settings } from '../../lib/content';
+import { asset } from '../../lib/url';
+import { t } from '../../lib/i18n';
+
+interface Props {
+  /** Render only the buttons, without the card and title (e.g. in a footer). */
+  bare?: boolean;
+}
+
+const { bare = false } = Astro.props;
+const app = (settings as { app?: { play_store?: string; app_store?: string; android_apk?: string } }).app ?? {};
+const has = !!(app.play_store || app.app_store || app.android_apk);
+---
+
+{
+  has && (
+    <section class:list={[bare ? 'w-apps-bare' : 'w-card']}>
+      {!bare && <h2 class="w-card__title">{t('downloadApp')}</h2>}
+      <div class="w-apps">
+        {app.play_store && (
+          <a class="w-app" href={app.play_store} target="_blank" rel="noopener">
+            <Icon name="playstore" size={22} />
+            <span>
+              <small>{t('getItOn')}</small>
+              <b>Google Play</b>
+            </span>
+          </a>
+        )}
+        {app.android_apk && (
+          <a class="w-app" href={asset(app.android_apk)} download>
+            <Icon name="android" size={22} />
+            <span>
+              <small>{t('androidApp')}</small>
+              <b>{t('downloadApk')}</b>
+            </span>
+          </a>
+        )}
+        {app.app_store && (
+          <a class="w-app" href={app.app_store} target="_blank" rel="noopener">
+            <Icon name="apple" size={22} />
+            <span>
+              <small>{t('downloadOn')}</small>
+              <b>App Store</b>
+            </span>
+          </a>
+        )}
+      </div>
+    </section>
+  )
+}

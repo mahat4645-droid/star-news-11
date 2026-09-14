@@ -1,0 +1,136 @@
+---
+import Avatar from '../../components/Avatar.astro';
+import CoverImage from '../../components/CoverImage.astro';
+import ShareBar from '../../components/ShareBar.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import YouTube from '../../components/YouTube.astro';
+import BlockHead from './BlockHead.astro';
+import Sidebar from './Sidebar.astro';
+import { authorUrl, categoryUrl, formatDateTime, settings, tagUrl } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+import type { StoryPageProps } from '../../lib/story';
+
+type Props = StoryPageProps;
+const { article, Content, category, parentCategory, author, cover, videoId, pageUrl, ratio, related, shareImage, minutes } = Astro.props;
+const { data } = article;
+---
+
+<div class="progress" aria-hidden="true"></div>
+
+<div class="container sm-layout">
+  <article class="sm-story" style={`--cat:${category.color}`}>
+    <nav class="sm-crumbs" aria-label="Breadcrumb">
+      <a href={url()}>{t('home')}</a>
+      {parentCategory && <a href={categoryUrl(parentCategory.id)}>{parentCategory.name}</a>}
+      <a href={categoryUrl(category.id)} aria-current="page">{category.name}</a>
+    </nav>
+
+    <div data-pagefind-body>
+      {shareImage && <span hidden data-pagefind-meta={`image:${shareImage}`}></span>}
+      <span hidden data-pagefind-filter="Section">{category.name}</span>
+
+      <header class="sm-story__head">
+        <div class="card__kicker" data-pagefind-ignore>
+          {data.draft && <span class="flag flag--draft">{t('draft')}</span>}
+          {data.breaking && <span class="flag">{t('breaking')}</span>}
+          {videoId && <span class="flag flag--video">{t('video')}</span>}
+          <a class="kicker" href={categoryUrl(category.id)}>{category.name}</a>
+        </div>
+        <h1 class="sm-story__title" data-pagefind-meta="title">{data.title}</h1>
+        {data.excerpt && <p class="sm-story__dek">{data.excerpt}</p>}
+
+        <div class="sm-story__meta" data-pagefind-ignore>
+          {author && <Avatar author={author} size={42} />}
+          <div>
+            {
+              author ? (
+                <a class="sm-story__author" href={authorUrl(author.id)}>{author.name}</a>
+              ) : (
+                <span class="sm-story__author">{t('desk', { site: settings.site_title })}</span>
+              )
+            }
+            <p class="meta">
+              <time datetime={data.date.toISOString()}>{formatDateTime(data.date)}</time>
+              <span>{t('minRead', { n: minutes })}</span>
+            </p>
+          </div>
+        </div>
+        <div class="sm-story__share" data-pagefind-ignore>
+          <ShareBar url={pageUrl} title={data.title} whatsappButton />
+        </div>
+      </header>
+
+      {
+        videoId ? (
+          <figure class="sm-story__media">
+            <YouTube id={videoId} title={data.title} poster={cover} eager sizes="(min-width: 1000px) 820px, 100vw" />
+            {data.cover_caption && <figcaption>{data.cover_caption}</figcaption>}
+          </figure>
+        ) : (
+          cover && (
+            <figure class="sm-story__media">
+              <CoverImage
+                image={cover}
+                alt={data.cover_alt ?? ''}
+                ratio={ratio}
+                eager
+                sizes="(min-width: 1000px) 820px, 100vw"
+                widths={[480, 720, 960, 1280]}
+              />
+              {data.cover_caption && <figcaption>{data.cover_caption}</figcaption>}
+            </figure>
+          )
+        )
+      }
+
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <footer class="sm-story__foot">
+      {
+        data.tags.length > 0 && (
+          <ul class="sm-tags" aria-label={t('topics')}>
+            {data.tags.map((tag) => (
+              <li><a href={tagUrl(tag)}>#{tag}</a></li>
+            ))}
+          </ul>
+        )
+      }
+      <div class="sm-story__sharebox">
+        <span>{t('shareStory')}</span>
+        <ShareBar url={pageUrl} title={data.title} whatsappButton />
+      </div>
+      {
+        author && (author.bio || author.role) && (
+          <div class="sm-author">
+            <Avatar author={author} size={56} />
+            <div>
+              <a class="sm-author__name" href={authorUrl(author.id)}>{author.name}</a>
+              {author.role && <p class="sm-author__role">{author.role}</p>}
+              {author.bio && <p class="sm-author__bio">{author.bio}</p>}
+            </div>
+          </div>
+        )
+      }
+    </footer>
+  </article>
+  <Sidebar exclude={article.id} />
+</div>
+
+{
+  related.length > 0 && (
+    <div class="container">
+      <section class="sm-block sm-related" aria-labelledby="blk-related">
+        <BlockHead title={t('related')} href={categoryUrl(category.id)} color={category.color} id="blk-related" />
+        <div class="sm-grid sm-grid--4">
+          {related.map((a) => (
+            <StoryCard article={a} ratio="16 / 10" sizes="(min-width: 1000px) 280px, (min-width: 560px) 45vw, 112px" />
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}

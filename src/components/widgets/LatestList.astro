@@ -1,0 +1,40 @@
+---
+import CoverImage from '../CoverImage.astro';
+import { articleUrl, coverOf, formatShortDate, getArticles, youtubeId, type Article, type ResolvedImage } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+interface Props {
+  limit?: number;
+  title?: string;
+  /** Story id to leave out (e.g. the story being read). */
+  exclude?: string;
+}
+
+const { limit = 6, title = t('latestNews'), exclude } = Astro.props;
+const items = (await getArticles()).filter((a) => a.id !== exclude).slice(0, limit);
+const thumb = (a: Article): ResolvedImage | undefined => {
+  const id = youtubeId(a.data.youtube);
+  return coverOf(a) ?? (id ? { kind: 'url', src: `https://i.ytimg.com/vi/${id}/mqdefault.jpg` } : undefined);
+};
+---
+
+<section class="w-card">
+  <h2 class="w-card__title"><span class="live-dot"></span>{title}</h2>
+  <ol class="w-latest">
+    {
+      items.map((a) => (
+        <li class="w-latest__item">
+          <CoverImage image={thumb(a)} alt="" ratio="1 / 1" sizes="76px" widths={[160]} class="w-latest__thumb" />
+          <div class="w-latest__body">
+            <h3 class="w-latest__title">
+              <a href={articleUrl(a)}>{a.data.title}</a>
+            </h3>
+            <time datetime={a.data.date.toISOString()} data-rel>{formatShortDate(a.data.date)}</time>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <a class="w-card__more" href={url('latest/')}>{t('allLatest')} <span aria-hidden="true">→</span></a>
+</section>

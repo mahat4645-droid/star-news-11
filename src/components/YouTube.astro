@@ -1,0 +1,41 @@
+---
+import CoverImage from './CoverImage.astro';
+import type { ResolvedImage } from '../lib/content';
+import { t } from '../lib/i18n';
+
+// A "facade": only a thumbnail loads until the reader presses play, keeping pages fast.
+// The YouTube player (≈1 MB of script) is injected on click by src/scripts/site.ts.
+interface Props {
+  id: string;
+  title: string;
+  poster?: ResolvedImage;
+  eager?: boolean;
+  sizes?: string;
+}
+
+const { id, title, poster, eager = false, sizes = '(min-width: 1180px) 1180px, 100vw' } = Astro.props;
+---
+
+<div class="yt" data-yt={id} data-title={title}>
+  <button type="button" class="yt__btn" aria-label={t('playVideo', { title })}>
+    {
+      poster ? (
+        <CoverImage image={poster} alt="" ratio="16 / 9" sizes={sizes} eager={eager} widths={[640, 960, 1280, 1600]} />
+      ) : (
+        <div class="media" style="aspect-ratio:16 / 9">
+          <img
+            src={`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`}
+            data-yt-thumb={id}
+            alt=""
+            loading={eager ? 'eager' : 'lazy'}
+            fetchpriority={eager ? 'high' : undefined}
+            decoding="async"
+          />
+        </div>
+      )
+    }
+    <span class="yt__play" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+    </span>
+  </button>
+</div>

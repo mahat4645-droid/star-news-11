@@ -1,0 +1,39 @@
+---
+import StoryCard from '../../components/StoryCard.astro';
+import BlockHead from './BlockHead.astro';
+import { categoryUrl, type Article, type Category } from '../../lib/content';
+
+interface Props {
+  category: Category;
+  stories: Article[];
+  /** feature: big story beside a list · compact: story on top of a short list (for grids of blocks) */
+  layout?: 'feature' | 'compact';
+}
+
+const { category, stories, layout = 'feature' } = Astro.props;
+const [main, ...rest] = stories;
+const id = `blk-${category.id}`;
+---
+
+<section class:list={['sm-block', `sm-block--${layout}`]} style={`--cat:${category.color}`} aria-labelledby={id}>
+  <BlockHead title={category.name} href={categoryUrl(category.id)} id={id} />
+  <div class={layout === 'feature' ? 'sm-feature' : 'sm-compact'}>
+    <StoryCard
+      article={main}
+      variant="stack"
+      excerpt={layout === 'feature'}
+      ratio="16 / 10"
+      kicker={false}
+      sizes={layout === 'feature' ? '(min-width: 1000px) 440px, 100vw' : '(min-width: 1000px) 380px, (min-width: 640px) 45vw, 100vw'}
+    />
+    {
+      rest.length > 0 && (
+        <div class="sm-list">
+          {rest.slice(0, layout === 'feature' ? 4 : 3).map((a) => (
+            <StoryCard article={a} variant="mini" sizes="112px" kicker={false} author={false} />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

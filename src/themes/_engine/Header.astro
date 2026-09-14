@@ -1,0 +1,134 @@
+---
+import Icon from '../../components/Icon.astro';
+import SocialIcons from '../../components/SocialIcons.astro';
+import Logo from './Logo.astro';
+import { categoryUrl, getCategories, getChildCategories, getTopCategories, getWebStories, settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+interface Props {
+  active?: string;
+}
+
+const { active } = Astro.props;
+const top = await getTopCategories();
+const sections = await Promise.all(top.map(async (c) => ({ ...c, kids: await getChildCategories(c.id) })));
+const activeCategory = (await getCategories()).find((c) => c.id === active);
+const activeTop = activeCategory?.parent ?? active;
+const hasWebStories = (await getWebStories()).length > 0;
+const whatsapp = (settings as { whatsapp_channel?: string }).whatsapp_channel;
+const today = new Intl.DateTimeFormat(settings.locale, {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: settings.timezone,
+}).format(new Date());
+const isCurrent = (key?: string) => (key && (active === key || activeTop === key) ? 'page' : undefined);
+// Phone menu chips: every section, with sub-sections (e.g. each state) right after their parent.
+const chips = sections.flatMap((c) => [c, ...c.kids]);
+---
+
+<div class="sm-topbar">
+  <div class="container sm-topbar__inner">
+    <time data-today>{today}</time>
+    <div class="sm-topbar__right">
+      <SocialIcons class="sm-social sm-social--top" size={14} />
+      <button type="button" class="sm-topbar__btn" data-theme-toggle aria-label={t('toggleTheme')}>
+        <Icon name="moon" size={15} class="icon-moon" />
+        <Icon name="sun" size={15} class="icon-sun" />
+        {t('darkMode')}
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="sm-header">
+  <div class="container sm-header__inner">
+    <button type="button" class="icon-btn sm-mobile-only" data-drawer-open aria-label={t('menu')}>
+      <Icon name="menu" size={24} />
+    </button>
+    <Logo />
+    <form class="sm-search sm-desktop-only" action={url('search/')} role="search">
+      <input type="search" name="q" placeholder={t('searchPlaceholder')} aria-label={t('search')} data-search-input />
+      <button type="submit" aria-label={t('search')}><Icon name="search" size={18} /></button>
+    </form>
+    {
+      whatsapp && (
+        <a class="btn btn--wa sm-desktop-only" href={whatsapp} target="_blank" rel="noopener">
+          <Icon name="whatsapp" size={18} />
+          {t('joinWhatsApp')}
+        </a>
+      )
+    }
+    <a class="icon-btn sm-mobile-only sm-header__searchlink" href={url('search/')} aria-label={t('search')}>
+      <Icon name="search" size={22} />
+    </a>
+  </div>
+</header>
+
+<nav class="sm-nav" aria-label={t('sections')}>
+  <div class="container">
+    <ul class="sm-nav__list">
+      <li>
+        <a class="sm-nav__link sm-nav__home" href={url()} aria-current={isCurrent('home')} aria-label={t('home')}>
+          <Icon name="home" size={19} />
+        </a>
+      </li>
+      {
+        sections.map((c) =>
+          c.kids.length ? (
+            <li class="sm-nav__item has-menu">
+              <a class="sm-nav__link" href={categoryUrl(c.id)} aria-current={isCurrent(c.id)}>
+                {c.name}
+                <Icon name="chevronDown" size={15} />
+              </a>
+              <ul class="sm-nav__menu">
+                {c.kids.map((k) => (
+                  <li>
+                    <a href={categoryUrl(k.id)} aria-current={active === k.id ? 'page' : undefined}>
+                      {k.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a class="sm-nav__link" href={categoryUrl(c.id)} aria-current={isCurrent(c.id)}>
+                {c.name}
+              </a>
+            </li>
+          ),
+        )
+      }
+      <li>
+        <a class="sm-nav__link" href={url('videos/')} aria-current={isCurrent('videos')}>
+          <Icon name="playFill" size={13} />
+          {t('videos')}
+        </a>
+      </li>
+      {
+        hasWebStories && (
+          <li>
+            <a class="sm-nav__link" href={url('web-stories/')} aria-current={isCurrent('webstories')}>
+              {t('webStories')}
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</nav>
+
+<nav class="sm-chips" aria-label={t('sections')} data-scroll-active>
+  <a class="sm-chip" href={url()} aria-current={active === 'home' ? 'page' : undefined}>{t('home')}</a>
+  <a class="sm-chip" href={url('latest/')} aria-current={active === 'latest' ? 'page' : undefined}>{t('latest')}</a>
+  {
+    chips.map((c) => (
+      <a class="sm-chip" href={categoryUrl(c.id)} aria-current={active === c.id ? 'page' : undefined}>
+        {c.name}
+      </a>
+    ))
+  }
+</nav>

@@ -1,0 +1,30 @@
+---
+import Icon from '../Icon.astro';
+import { settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+const whatsapp = (settings as { whatsapp_channel?: string }).whatsapp_channel;
+const telegram = (settings as { telegram_channel?: string }).telegram_channel;
+---
+
+{
+  (whatsapp || telegram) && (
+    <section class="w-card w-join">
+      <h2 class="w-card__title">{t('joinTitle')}</h2>
+      <div class="w-join__btns">
+        {whatsapp && (
+          <a class="btn btn--wa" href={whatsapp} target="_blank" rel="noopener">
+            <Icon name="whatsapp" size={18} />
+            {t('joinWhatsApp')}
+          </a>
+        )}
+        {telegram && (
+          <a class="btn btn--tg" href={telegram} target="_blank" rel="noopener">
+            <Icon name="telegram" size={18} />
+            {t('joinTelegram')}
+          </a>
+        )}
+      </div>
+    </section>
+  )
+}

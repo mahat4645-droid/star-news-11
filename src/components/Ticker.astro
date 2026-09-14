@@ -1,0 +1,38 @@
+---
+import { getArticles, articleUrl, settings } from '../lib/content';
+import { t } from '../lib/i18n';
+
+// Stories marked "Breaking news" in the admin panel scroll here.
+const items = settings.show_ticker ? (await getArticles()).filter((a) => a.data.breaking).slice(0, 8) : [];
+// Repeat short lists so the loop never shows a gap.
+const row = items.length ? Array.from({ length: Math.ceil(4 / items.length) }, () => items).flat() : [];
+const duration = Math.max(28, row.length * 9);
+---
+
+{
+  items.length > 0 && (
+    <div class="ticker" role="region" aria-label={t('breakingNews')}>
+      <div class="container ticker__inner">
+        <span class="ticker__label">
+          <span class="live-dot" />
+          {settings.ticker_label || t('breaking')}
+        </span>
+        <div class="ticker__viewport">
+          <div class="ticker__track" style={`--dur:${duration}s`}>
+            {[0, 1].map((copy) => (
+              <ul class="ticker__list" aria-hidden={copy === 1 ? 'true' : undefined}>
+                {row.map((a, i) => (
+                  <li>
+                    <a class="ticker__item" href={articleUrl(a)} tabindex={copy === 1 || i >= items.length ? -1 : undefined}>
+                      {a.data.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

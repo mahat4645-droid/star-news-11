@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from '../../components/Icon.astro';
+import SocialIcons from '../../components/SocialIcons.astro';
+import Logo from './Logo.astro';
+import { categoryUrl, getChildCategories, getTopCategories, settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+// Slide-out menu for phones. A native <dialog> handles focus, the Escape key and the backdrop.
+const sections = await Promise.all((await getTopCategories()).map(async (c) => ({ ...c, kids: await getChildCategories(c.id) })));
+const pages = await getCollection('pages');
+const whatsapp = (settings as { whatsapp_channel?: string }).whatsapp_channel;
+const telegram = (settings as { telegram_channel?: string }).telegram_channel;
+---
+
+<dialog class="sm-drawer" data-drawer aria-label={t('menu')}>
+  <div class="sm-drawer__panel">
+    <div class="sm-drawer__head">
+      <Logo tagline={false} />
+      <button type="button" class="icon-btn" data-drawer-close aria-label={t('close')}>
+        <Icon name="close" size={22} />
+      </button>
+    </div>
+
+    <form class="sm-search" action={url('search/')} role="search">
+      <input type="search" name="q" placeholder={t('searchPlaceholder')} aria-label={t('search')} />
+      <button type="submit" aria-label={t('search')}><Icon name="search" size={18} /></button>
+    </form>
+
+    <nav aria-label={t('sections')}>
+      <ul class="sm-drawer__list">
+        <li><a href={url()}>{t('home')}</a></li>
+        <li><a href={url('latest/')}>{t('latestNews')}</a></li>
+        {
+          sections.map((c) => (
+            <li>
+              <a href={categoryUrl(c.id)} style={`--cat:${c.color}`}>
+                {c.name}
+                <Icon name="chevronRight" size={16} />
+              </a>
+              {c.kids.length > 0 && (
+                <ul class="sm-drawer__sub">
+                  {c.kids.map((k) => (
+                    <li>
+                      <a href={categoryUrl(k.id)}>{k.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+        <li><a href={url('videos/')}>{t('videos')}</a></li>
+        <li><a href={url('web-stories/')}>{t('webStories')}</a></li>
+      </ul>
+    </nav>
+
+    {
+      (whatsapp || telegram) && (
+        <div class="sm-drawer__cta">
+          {whatsapp && (
+            <a class="btn btn--wa" href={whatsapp} target="_blank" rel="noopener">
+              <Icon name="whatsapp" size={18} />
+              {t('joinWhatsApp')}
+            </a>
+          )}
+          {telegram && (
+            <a class="btn btn--tg" href={telegram} target="_blank" rel="noopener">
+              <Icon name="telegram" size={18} />
+              {t('joinTelegram')}
+            </a>
+          )}
+        </div>
+      )
+    }
+
+    <ul class="sm-drawer__pages">
+      {pages.map((p) => <li><a href={url(`${p.id}/`)}>{p.data.title}</a></li>)}
+    </ul>
+
+    <div class="sm-drawer__foot">
+      <SocialIcons class="sm-social" />
+      <button type="button" class="btn btn--ghost" data-theme-toggle>
+        <Icon name="moon" size={16} class="icon-moon" />
+        <Icon name="sun" size={16} class="icon-sun" />
+        {t('darkMode')}
+      </button>
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,31 @@
+---
+import { articleUrl, getArticles } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+// A static site has no view counter, so this list shows the stories editors mark as "Featured".
+interface Props {
+  limit?: number;
+  exclude?: string;
+}
+
+const { limit = 5, exclude } = Astro.props;
+const all = (await getArticles()).filter((a) => a.id !== exclude);
+const featured = all.filter((a) => a.data.featured);
+const items = [...featured, ...all.filter((a) => !a.data.featured)].slice(0, limit);
+---
+
+<section class="w-card">
+  <h2 class="w-card__title">{t('mostRead')}</h2>
+  <ol class="w-rank">
+    {
+      items.map((a, i) => (
+        <li class="w-rank__item">
+          <span class="w-rank__num" aria-hidden="true">
+            {i + 1}
+          </span>
+          <a href={articleUrl(a)}>{a.data.title}</a>
+        </li>
+      ))
+    }
+  </ol>
+</section>

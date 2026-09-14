@@ -1,0 +1,18 @@
+---
+import CoverImage from './CoverImage.astro';
+import { webStoryCover, webStoryUrl, type WebStory } from '../lib/content';
+
+interface Props {
+  story: WebStory;
+  eager?: boolean;
+}
+
+const { story, eager = false } = Astro.props;
+const bars = Math.min(story.data.slides.length + 1, 6);
+---
+
+<a class="ws-card" href={webStoryUrl(story)}>
+  <CoverImage image={webStoryCover(story)} alt="" ratio="9 / 16" sizes="180px" widths={[240, 360, 480]} eager={eager} />
+  <span class="ws-card__bars" aria-hidden="true">{Array.from({ length: bars }, () => <span />)}</span>
+  <span class="ws-card__title">{story.data.title}</span>
+</a>

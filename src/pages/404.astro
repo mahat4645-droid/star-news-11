@@ -1,0 +1,52 @@
+---
+import { Layout } from '@theme';
+import { articleUrl, getArticles } from '../lib/content';
+import { t } from '../lib/i18n';
+import { url } from '../lib/url';
+
+const latest = (await getArticles()).slice(0, 5);
+---
+
+<Layout title={t('notFound')} noindex>
+  <div class="container">
+    <div class="notfound">
+      <p class="notfound__code">404</p>
+      <h1 class="notfound__title">{t('notFoundTitle')}</h1>
+      <p><a class="arrow-link" href={url()}>{t('backHome')} <span aria-hidden="true">→</span></a></p>
+    </div>
+    {
+      latest.length > 0 && (
+        <section class="notfound__latest" aria-label={t('latestStories')}>
+          <h2 class="page-head__eyebrow">{t('latestStories')}</h2>
+          <ul>
+            {latest.map((a) => (
+              <li><a href={articleUrl(a)}>{a.data.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</Layout>
+
+<style>
+  .notfound__latest {
+    max-width: 640px;
+    margin: 1rem auto 0;
+  }
+
+  .notfound__latest ul {
+    margin-top: 1rem;
+  }
+
+  .notfound__latest li {
+    padding-block: 0.8rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-head);
+    font-weight: 600;
+  }
+
+  .notfound__latest a:hover {
+    color: var(--accent);
+  }
+</style>

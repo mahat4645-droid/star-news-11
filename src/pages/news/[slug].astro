@@ -1,0 +1,107 @@
+---
+import { render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import { Layout, StoryPage } from '@theme';
+import { url } from '../../lib/url';
+import {
+  articleUrl,
+  authorUrl,
+  coverOf,
+  excerptOf,
+  getArticles,
+  getAuthor,
+  getCategory,
+  readingTime,
+  settings,
+  youtubeId,
+  type Article,
+} from '../../lib/content';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+const { article } = Astro.props as { article: Article };
+const { data } = article;
+const { Content } = await render(article);
+const [category, author, all] = await Promise.all([getCategory(data.category), getAuthor(data.author), getArticles()]);
+const parentCategory = category.parent ? await getCategory(category.parent) : undefined;
+
+const cover = coverOf(article);
+const videoId = youtubeId(data.youtube);
+const pageUrl = new URL(articleUrl(article), Astro.site).href;
+const description = excerptOf(article, 200);
+
+// Social share image: a 1200px JPEG rendered from the cover at build time.
+let shareImage: string | undefined;
+if (cover?.kind === 'local') shareImage = (await getImage({ src: cover.src, width: 1200, format: 'jpg', quality: 80 })).src;
+else if (cover) shareImage = cover.src;
+else if (videoId) shareImage = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+
+const aspect = cover?.kind === 'local' ? cover.src.width / cover.src.height : 0;
+const ratio = aspect > 1.2 && aspect < 2.4 && cover?.kind === 'local' ? `${cover.src.width} / ${cover.src.height}` : '3 / 2';
+
+// Related: same section first, then the parent section, then everything else.
+const others = all.filter((a) => a.id !== article.id);
+const sameParent = (a: Article) => !!category.parent && a.data.category !== data.category && others.includes(a);
+const related = [
+  ...others.filter((a) => a.data.category === data.category),
+  ...others.filter(sameParent),
+  ...others.filter((a) => a.data.category !== data.category),
+]
+  .filter((a, i, list) => list.indexOf(a) === i)
+  .slice(0, 4);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: data.title,
+  description,
+  datePublished: data.date.toISOString(),
+  dateModified: (data.updated ?? data.date).toISOString(),
+  mainEntityOfPage: pageUrl,
+  articleSection: category.name,
+  inLanguage: settings.locale,
+  keywords: data.tags.join(', ') || undefined,
+  image: shareImage ? [new URL(shareImage, Astro.site).href] : undefined,
+  author: author ? [{ '@type': 'Person', name: author.name, url: new URL(authorUrl(author.id), Astro.site).href }] : undefined,
+  publisher: {
+    '@type': 'Organization',
+    name: settings.site_title,
+    logo: { '@type': 'ImageObject', url: new URL(url('icons/icon-512.png'), Astro.site).href },
+  },
+};
+---
+
+<Layout
+  title={data.title}
+  description={description}
+  image={shareImage}
+  type="article"
+  activeNav={category.id}
+  jsonLd={jsonLd}
+  preconnectYouTube={!!videoId && !cover}
+  noindex={data.draft}
+>
+  <Fragment slot="head">
+    <meta property="article:published_time" content={data.date.toISOString()} />
+    {data.updated && <meta property="article:modified_time" content={data.updated.toISOString()} />}
+    <meta property="article:section" content={category.name} />
+    {data.tags.map((tag) => <meta property="article:tag" content={tag} />)}
+  </Fragment>
+  <StoryPage
+    article={article}
+    Content={Content}
+    category={category}
+    parentCategory={parentCategory}
+    author={author}
+    cover={cover}
+    videoId={videoId}
+    pageUrl={pageUrl}
+    ratio={ratio}
+    related={related}
+    shareImage={shareImage}
+    minutes={readingTime(article.body)}
+  />
+</Layout>

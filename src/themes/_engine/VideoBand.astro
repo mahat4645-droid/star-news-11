@@ -1,0 +1,45 @@
+---
+import Icon from '../../components/Icon.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import YouTube from '../../components/YouTube.astro';
+import { articleUrl, coverOf, getArticles, youtubeId } from '../../lib/content';
+import { url } from '../../lib/url';
+import { t } from '../../lib/i18n';
+
+const videos = (await getArticles()).filter((a) => youtubeId(a.data.youtube));
+const [main, ...rest] = videos;
+---
+
+{
+  main && (
+    <section class="sm-videos" aria-labelledby="blk-videos">
+      <div class="container">
+        <div class="sm-bh">
+          <h2 class="sm-bh__title" id="blk-videos">
+            <Icon name="play" size={22} />
+            {t('videos')}
+          </h2>
+          <a class="sm-bh__more" href={url('videos/')}>
+            {t('allVideos')}
+            <Icon name="chevronRight" size={16} />
+          </a>
+        </div>
+        <div class="sm-videos__grid">
+          <div class="sm-videos__main">
+            <YouTube id={youtubeId(main.data.youtube)!} title={main.data.title} poster={coverOf(main)} />
+            <h3 class="sm-videos__title">
+              <a href={articleUrl(main)}>{main.data.title}</a>
+            </h3>
+          </div>
+          {rest.length > 0 && (
+            <div class="sm-videos__list">
+              {rest.slice(0, 3).map((a) => (
+                <StoryCard article={a} variant="row" ratio="16 / 9" sizes="200px" kicker={false} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

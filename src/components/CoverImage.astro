@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import type { ResolvedImage } from '../lib/content';
+
+interface Props {
+  image?: ResolvedImage;
+  alt?: string;
+  sizes?: string;
+  widths?: number[];
+  ratio?: string;
+  eager?: boolean;
+  class?: string;
+  /** Text shown on the placeholder when a story has no image. */
+  label?: string;
+  /** YouTube id — lets the page swap in a smaller thumbnail if the max-res one doesn't exist. */
+  ytThumb?: string;
+}
+
+const {
+  image,
+  alt = '',
+  sizes = '(min-width: 1024px) 33vw, 100vw',
+  widths = [360, 560, 800, 1100, 1500],
+  ratio = '3 / 2',
+  eager = false,
+  class: className,
+  label,
+  ytThumb,
+} = Astro.props;
+
+// Never upscale: only request widths the source can actually provide.
+let fit = widths;
+if (image?.kind === 'local') {
+  fit = widths.filter((w) => w <= image.src.width);
+  if (!fit.length) fit = [image.src.width];
+}
+---
+
+<div class:list={['media', className]} style={`aspect-ratio:${ratio}`}>
+  {
+    image?.kind === 'local' ? (
+      <Image
+        src={image.src}
+        alt={alt}
+        widths={fit}
+        sizes={sizes}
+        quality={78}
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined}
+      />
+    ) : image ? (
+      <img
+        src={image.src}
+        alt={alt}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchpriority={eager ? 'high' : undefined}
+        data-yt-thumb={ytThumb}
+      />
+    ) : (
+      <div class="media__placeholder" aria-hidden="true">
+        <span>{label}</span>
+      </div>
+    )
+  }
+</div>

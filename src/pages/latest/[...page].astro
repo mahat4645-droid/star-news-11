@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import { Layout, ListPage } from '@theme';
+import { getArticles, type Article } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+export const getStaticPaths = (async ({ paginate }) => paginate(await getArticles(), { pageSize: 20 })) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<Article> };
+const title = page.currentPage === 1 ? t('latestNews') : t('pageN', { title: t('latestNews'), n: page.currentPage });
+---
+
+<Layout title={title} activeNav="latest">
+  <ListPage mode="latest" title={t('latestNews')} eyebrow={t('asItHappens')} description={t('everyStory')} stories={page.data} page={page} />
+</Layout>

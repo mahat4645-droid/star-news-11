@@ -1,0 +1,21 @@
+---
+import Icon from '../../components/Icon.astro';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+// App-style bottom navigation, shown on phones only.
+interface Props {
+  active?: string;
+}
+
+const { active } = Astro.props;
+const current = (key: string) => (active === key ? 'page' : undefined);
+---
+
+<nav class="sm-tabbar" aria-label={t('menu')}>
+  <a href={url()} aria-current={current('home')}><Icon name="home" size={22} /><span>{t('home')}</span></a>
+  <a href={url('latest/')} aria-current={current('latest')}><Icon name="clock" size={22} /><span>{t('latest')}</span></a>
+  <a href={url('videos/')} aria-current={current('videos')}><Icon name="play" size={22} /><span>{t('videos')}</span></a>
+  <a href={url('web-stories/')} aria-current={current('webstories')}><Icon name="stories" size={22} /><span>{t('storiesTab')}</span></a>
+  <button type="button" data-drawer-open><Icon name="menu" size={22} /><span>{t('menu')}</span></button>
+</nav>

@@ -1,0 +1,21 @@
+---
+import { Layout, HomePage } from '@theme';
+import { settings } from '../lib/content';
+import { url } from '../lib/url';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: settings.site_title,
+  url: Astro.site?.href,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${new URL(url('search/'), Astro.site).href}?q={query}`,
+    'query-input': 'required name=query',
+  },
+};
+---
+
+<Layout activeNav="home" jsonLd={jsonLd}>
+  <HomePage />
+</Layout>

@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+import { settings } from '../lib/content';
+
+interface Props {
+  class?: string;
+  size?: number;
+}
+
+const { class: className, size = 16 } = Astro.props;
+const networks = [
+  ['facebook', 'Facebook'],
+  ['x', 'X'],
+  ['instagram', 'Instagram'],
+  ['youtube', 'YouTube'],
+  ['whatsapp', 'WhatsApp'],
+] as const;
+const links: Record<string, string> = settings.social ?? {};
+const items = networks.filter(([key]) => links[key]);
+---
+
+{
+  items.length > 0 && (
+    <ul class:list={['social', className]}>
+      {items.map(([key, label]) => (
+        <li>
+          <a href={links[key]} target="_blank" rel="noopener me" aria-label={label} title={label}>
+            <Icon name={key} size={size} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

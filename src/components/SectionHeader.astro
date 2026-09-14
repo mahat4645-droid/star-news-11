@@ -1,0 +1,25 @@
+---
+import { t } from '../lib/i18n';
+
+interface Props {
+  title: string;
+  href?: string;
+  color?: string;
+  more?: string;
+  id?: string;
+}
+
+const { title, href, color, more = t('more'), id } = Astro.props;
+---
+
+<div class="section-head" style={color ? `--cat:${color}` : undefined}>
+  <h2 class="section-head__title" id={id}>{href ? <a href={href}>{title}</a> : title}</h2>
+  {
+    href && (
+      <a class="section-head__more" href={href}>
+        {more} <span aria-hidden="true">→</span>
+      </a>
+    )
+  }
+  <slot />
+</div>

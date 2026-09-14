@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import SocialIcons from '../../components/SocialIcons.astro';
+import AppBadges from '../../components/widgets/AppBadges.astro';
+import Logo from './Logo.astro';
+import { categoryUrl, getChildCategories, getTopCategories, settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+const top = await getTopCategories();
+const withKids = await Promise.all(top.map(async (c) => ({ ...c, kids: await getChildCategories(c.id) })));
+const group = withKids.find((c) => c.kids.length > 0);
+const pages = (await getCollection('pages')).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const year = new Date().getFullYear();
+---
+
+<footer class="sm-footer">
+  <div class="container sm-footer__grid">
+    <div class="sm-footer__brand">
+      <Logo />
+      <p>{settings.description}</p>
+      <SocialIcons class="sm-social" />
+    </div>
+    <div>
+      <h2>{t('sections')}</h2>
+      <ul>
+        {top.map((c) => <li><a href={categoryUrl(c.id)}>{c.name}</a></li>)}
+      </ul>
+    </div>
+    {
+      group && (
+        <div>
+          <h2>{group.name}</h2>
+          <ul>
+            {group.kids.map((k) => (
+              <li><a href={categoryUrl(k.id)}>{k.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+    <div>
+      <h2>{t('about')}</h2>
+      <ul>
+        {pages.map((p) => <li><a href={url(`${p.id}/`)}>{p.data.title}</a></li>)}
+        <li><a href={url('web-stories/')}>{t('webStories')}</a></li>
+        <li><a href={url('rss.xml')}>{t('rss')}</a></li>
+      </ul>
+      <AppBadges bare />
+    </div>
+  </div>
+  <div class="container sm-footer__bottom">
+    <p>© {year} {settings.site_title}</p>
+    {settings.footer_note && <p>{settings.footer_note}</p>}
+  </div>
+</footer>

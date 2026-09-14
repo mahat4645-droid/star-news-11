@@ -1,0 +1,28 @@
+---
+import Icon from '../../components/Icon.astro';
+import { t } from '../../lib/i18n';
+
+interface Props {
+  title: string;
+  href?: string;
+  color?: string;
+  id?: string;
+  more?: string;
+  heading?: 'h1' | 'h2' | 'h3';
+}
+
+const { title, href, color, id, more = t('more'), heading = 'h2' } = Astro.props;
+const Heading = heading;
+---
+
+<div class="sm-bh" style={color ? `--cat:${color}` : undefined}>
+  <Heading class="sm-bh__title" id={id}>{href ? <a href={href}>{title}</a> : title}</Heading>
+  {
+    href && (
+      <a class="sm-bh__more" href={href}>
+        {more}
+        <Icon name="chevronRight" size={16} />
+      </a>
+    )
+  }
+</div>

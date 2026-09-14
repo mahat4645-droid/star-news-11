@@ -1,0 +1,21 @@
+---
+import { Layout, ListPage } from '@theme';
+import { getArticles, getAuthor, getAuthors, type Article, type Author } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  const ids = new Set([...(await getAuthors()).map((a) => a.id), ...articles.flatMap((a) => (a.data.author ? [a.data.author] : []))]);
+  return Promise.all(
+    [...ids].map(async (id) => ({
+      params: { slug: id },
+      props: { author: (await getAuthor(id))!, stories: articles.filter((a) => a.data.author === id) },
+    })),
+  );
+}
+
+const { author, stories } = Astro.props as { author: Author; stories: Article[] };
+---
+
+<Layout title={author.name} description={author.bio || author.name}>
+  <ListPage mode="author" title={author.name} author={author} stories={stories} />
+</Layout>

@@ -1,0 +1,26 @@
+---
+import { Layout, ListPage } from '@theme';
+import { getArticles, slugify, type Article } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  const tags = new Map<string, { name: string; stories: Article[] }>();
+  for (const article of await getArticles()) {
+    for (const name of article.data.tags) {
+      const slug = slugify(name);
+      if (!slug) continue;
+      const entry = tags.get(slug) ?? { name, stories: [] };
+      entry.stories.push(article);
+      tags.set(slug, entry);
+    }
+  }
+  return [...tags].map(([tag, props]) => ({ params: { tag }, props }));
+}
+
+const { name, stories } = Astro.props as { name: string; stories: Article[] };
+const count = stories.length === 1 ? t('storyCount', { n: 1 }) : t('storiesCount', { n: stories.length });
+---
+
+<Layout title={`#${name}`} description={count}>
+  <ListPage mode="tag" title={`#${name}`} eyebrow={t('topic')} description={count} stories={stories} />
+</Layout>

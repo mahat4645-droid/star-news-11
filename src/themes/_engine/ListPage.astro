@@ -1,0 +1,90 @@
+---
+import Avatar from '../../components/Avatar.astro';
+import Pagination from '../../components/Pagination.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import Sidebar from './Sidebar.astro';
+import { categoryUrl, formatShortDate, formatTime } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import type { ListPageProps } from '../../lib/story';
+
+type Props = ListPageProps;
+const { mode, title, eyebrow, description, color, stories, page, author, subcategories = [] } = Astro.props;
+
+const first = !page || page.currentPage === 1;
+const lead = mode !== 'latest' && first ? stories[0] : undefined;
+const rest = lead ? stories.slice(1) : stories;
+---
+
+<div class="container sm-layout">
+  <div class="sm-layout__main">
+    <header class="sm-listhead" style={color ? `--cat:${color}` : undefined}>
+      {
+        author ? (
+          <div class="sm-listhead__author">
+            <Avatar author={author} size={72} />
+            <div>
+              <p class="sm-listhead__eyebrow">{author.role || t('contributor')}</p>
+              <h1 class="sm-listhead__title">{author.name}</h1>
+              {author.bio && <p class="sm-listhead__desc">{author.bio}</p>}
+            </div>
+          </div>
+        ) : (
+          <>
+            {eyebrow && <p class="sm-listhead__eyebrow">{eyebrow}</p>}
+            <h1 class="sm-listhead__title">{title}</h1>
+            {description && <p class="sm-listhead__desc">{description}</p>}
+            {subcategories.length > 0 && (
+              <ul class="sm-subchips">
+                {subcategories.map((c) => (
+                  <li><a class="sm-chip" href={categoryUrl(c.id)}>{c.name}</a></li>
+                ))}
+              </ul>
+            )}
+          </>
+        )
+      }
+    </header>
+
+    {stories.length === 0 && <p class="empty">{mode === 'category' ? t('noStoriesSection') : t('noStories')}</p>}
+
+    {
+      mode === 'latest' ? (
+        stories.length > 0 && (
+          <section class="sm-block">
+            <ol class="sm-timeline">
+              {stories.map((a, i) => (
+                <li class="sm-timeline__item">
+                  <time class="sm-timeline__time" datetime={a.data.date.toISOString()}>
+                    {formatTime(a.data.date)}
+                    <small>{formatShortDate(a.data.date)}</small>
+                  </time>
+                  <StoryCard article={a} variant="row" ratio="16 / 10" excerpt eager={first && i < 2} sizes="220px" />
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      ) : (
+        <>
+          {lead && (
+            <div class="sm-listlead">
+              <StoryCard article={lead} variant="overlay" heading="h2" eager ratio="16 / 9" sizes="(min-width: 1000px) 860px, 100vw" />
+            </div>
+          )}
+          {rest.length > 0 && (
+            <section class="sm-block">
+              <div class="sm-grid sm-grid--2">
+                {rest.map((a) => (
+                  <StoryCard article={a} ratio="16 / 10" excerpt sizes="(min-width: 1000px) 420px, (min-width: 560px) 45vw, 112px" />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )
+    }
+
+    {page && <Pagination page={page} />}
+  </div>
+  <Sidebar latest={mode !== 'latest'} />
+</div>

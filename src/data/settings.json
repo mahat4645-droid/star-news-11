@@ -1,0 +1,43 @@
+{
+  "theme": "suryoday",
+  "language": "hi",
+  "site_title": "स्टार न्यूज़ 11",
+  "tagline": "साथ सच का",
+  "description": "STAR NEWS 11 — रुड़की, हरिद्वार और उत्तराखंड की ताज़ा खबरें। साथ सच का।",
+  "logo": "/uploads/logo.png",
+  "brand_color": "",
+  "site_url": "https://star-news-11.pages.dev",
+  "locale": "hi-IN",
+  "timezone": "Asia/Kolkata",
+  "show_ticker": true,
+  "ticker_label": "ब्रेकिंग",
+  "auto_delete_days": 5,
+  "whatsapp_channel": "",
+  "telegram_channel": "",
+  "app": {
+    "play_store": "",
+    "app_store": ""
+  },
+  "social": {
+    "x": "",
+    "facebook": "",
+    "instagram": "",
+    "youtube": "",
+    "whatsapp": ""
+  },
+  "quotes": [
+    "मेहनत इतनी खामोशी से करो कि सफलता शोर मचा दे।",
+    "छोटे-छोटे कदम ही बड़ी मंज़िल तक पहुंचाते हैं।",
+    "जो बीत गया उस पर पछताने के बजाय, आने वाले कल को बेहतर बनाइए।",
+    "सच्चाई की राह कठिन ज़रूर है, पर उसका अंत हमेशा सुंदर होता है।",
+    "ज्ञान बांटने से बढ़ता है, इसलिए सीखते रहिए और सिखाते रहिए।",
+    "हर सुबह एक नया मौका है, उसे पूरे मन से जीइए।",
+    "दूसरों की मदद करना ही सबसे बड़ी सेवा है।"
+  ],
+  "donate": {
+    "upi_id": "",
+    "payee_name": "स्टार न्यूज़ 11",
+    "note": ""
+  },
+  "footer_note": ""
+}

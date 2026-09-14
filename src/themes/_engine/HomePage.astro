@@ -1,0 +1,155 @@
+---
+import StoryCard from '../../components/StoryCard.astro';
+import WebStoryCard from '../../components/WebStoryCard.astro';
+import TrendingBar from '../../components/widgets/TrendingBar.astro';
+import BlockHead from './BlockHead.astro';
+import CategoryBlock from './CategoryBlock.astro';
+import Sidebar from './Sidebar.astro';
+import StateTabs from './StateTabs.astro';
+import VideoBand from './VideoBand.astro';
+import { config } from '@theme-config';
+import {
+  getArticles,
+  getChildCategories,
+  getTopCategories,
+  getTrendingTags,
+  getWebStories,
+  inCategory,
+  settings,
+  type Article,
+} from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { url } from '../../lib/url';
+
+const articles = await getArticles();
+
+// Each story appears once in the top part of the page.
+const seen = new Set<string>();
+function pick(pool: Article[], n: number): Article[] {
+  const out: Article[] = [];
+  for (const a of pool) {
+    if (out.length === n) break;
+    if (!seen.has(a.id)) {
+      seen.add(a.id);
+      out.push(a);
+    }
+  }
+  return out;
+}
+
+const featured = articles.filter((a) => a.data.featured);
+const [lead, ...heroSide] = pick([...featured, ...articles], 5);
+const topStories = pick(articles, 6);
+const trending = await getTrendingTags(10);
+const webStories = await getWebStories();
+
+// How the top stories are drawn depends on the theme's hero layout.
+const leadVariant = config.hero === 'split' ? 'stack' : 'overlay';
+const sideVariant = ({ grid: 'overlay', stack: 'mini', wide: 'standard', split: 'standard', columns: 'standard' } as const)[config.hero];
+
+const top = await getTopCategories();
+const kids = new Map(await Promise.all(top.map(async (c) => [c.id, await getChildCategories(c.id)] as const)));
+const statesParent = top.find((c) => (kids.get(c.id) ?? []).length > 0);
+const stateTabs = statesParent
+  ? (kids.get(statesParent.id) ?? [])
+      .map((category) => ({ category, stories: articles.filter((a) => a.data.category === category.id) }))
+      .filter((tab) => tab.stories.length > 0)
+  : [];
+
+const blocks = (
+  await Promise.all(
+    top
+      .filter((c) => c !== statesParent)
+      .map(async (category) => {
+        const match = await inCategory(category.id);
+        return { category, stories: articles.filter(match).slice(0, 5) };
+      }),
+  )
+).filter((b) => b.stories.length > 0);
+const featureBlocks = config.sections === 'compact' ? [] : blocks.slice(0, 3);
+const compactBlocks = config.sections === 'compact' ? blocks : blocks.slice(3);
+---
+
+<h1 class="visually-hidden">{settings.site_title}: {t('topNews')}</h1>
+{
+  !lead ? (
+    <div class="container empty">
+      <p>{t('noStories')}</p>
+      <p>{t('publishFirst')}</p>
+    </div>
+  ) : (
+    <>
+      <div class="container">
+        <TrendingBar tags={trending} />
+        <section class="sm-hero" aria-label={t('topNews')}>
+          <div class="sm-hero__lead">
+            <StoryCard
+              article={lead}
+              variant={leadVariant}
+              heading="h2"
+              eager
+              excerpt={leadVariant === 'stack'}
+              ratio="16 / 10"
+              sizes="(min-width: 1240px) 780px, (min-width: 760px) 62vw, 90vw"
+            />
+          </div>
+          <div class="sm-hero__side">
+            {heroSide.map((a) => (
+              <StoryCard
+                article={a}
+                variant={sideVariant}
+                ratio="16 / 10"
+                author={false}
+                kicker={sideVariant !== 'mini'}
+                sizes={sideVariant === 'mini' ? '112px' : '(min-width: 1240px) 360px, (min-width: 760px) 30vw, 86vw'}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <div class="container sm-layout">
+        <div class="sm-layout__main">
+          {webStories.length > 0 && (
+            <section class="sm-block" aria-labelledby="blk-ws">
+              <BlockHead title={t('webStories')} href={url('web-stories/')} id="blk-ws" />
+              <div class="ws-strip">
+                {webStories.map((s) => (
+                  <WebStoryCard story={s} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {topStories.length > 0 && (
+            <section class="sm-block" aria-labelledby="blk-top">
+              <BlockHead title={t('topStories')} href={url('latest/')} more={t('allNews')} id="blk-top" />
+              <div class="sm-grid sm-grid--3">
+                {topStories.map((a) => (
+                  <StoryCard article={a} ratio="16 / 10" sizes="(min-width: 1000px) 270px, (min-width: 560px) 45vw, 112px" />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {featureBlocks.map((b) => (
+            <CategoryBlock category={b.category} stories={b.stories} layout="feature" />
+          ))}
+
+          {statesParent && stateTabs.length > 0 && <StateTabs parent={statesParent} tabs={stateTabs} />}
+        </div>
+        <Sidebar />
+      </div>
+
+      <VideoBand />
+
+      {compactBlocks.length > 0 && (
+        <div class="container sm-blocks">
+          {compactBlocks.map((b) => (
+            <CategoryBlock category={b.category} stories={b.stories} layout="compact" />
+          ))}
+        </div>
+      )}
+    </>
+  )
+}

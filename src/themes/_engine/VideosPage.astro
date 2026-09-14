@@ -1,0 +1,54 @@
+---
+import StoryCard from '../../components/StoryCard.astro';
+import YouTube from '../../components/YouTube.astro';
+import { articleUrl, categoryUrl, coverOf, excerptOf, getArticles, getCategory, youtubeId } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+// Any story with a YouTube link appears here automatically.
+const videos = (await getArticles()).filter((a) => youtubeId(a.data.youtube));
+const [feature, ...rest] = videos;
+const featureCategory = feature && (await getCategory(feature.data.category));
+---
+
+<section class="sm-videos sm-videos--page">
+  <div class="container">
+    <header class="sm-videos__head">
+      <p class="sm-listhead__eyebrow">{t('watch')}</p>
+      <h1 class="sm-listhead__title">{t('videos')}</h1>
+      <p class="sm-listhead__desc">{t('videosDesc')}</p>
+    </header>
+    {
+      feature && featureCategory ? (
+        <div class="sm-videos__grid sm-videos__grid--feature" style={`--cat:${featureCategory.color}`}>
+          <YouTube id={youtubeId(feature.data.youtube)!} title={feature.data.title} poster={coverOf(feature)} eager />
+          <div class="sm-videos__caption">
+            <a class="kicker" href={categoryUrl(featureCategory.id)}>{featureCategory.name}</a>
+            <h2 class="sm-videos__title sm-videos__title--xl">
+              <a href={articleUrl(feature)}>{feature.data.title}</a>
+            </h2>
+            <p>{excerptOf(feature, 220)}</p>
+            <a class="arrow-link" href={articleUrl(feature)}>
+              {t('readFull')} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      ) : (
+        <p class="empty">{t('noVideos')}</p>
+      )
+    }
+  </div>
+</section>
+
+{
+  rest.length > 0 && (
+    <div class="container">
+      <section class="sm-block" aria-label={t('videos')}>
+        <div class="sm-grid sm-grid--3">
+          {rest.map((a) => (
+            <StoryCard article={a} ratio="16 / 9" excerpt sizes="(min-width: 1000px) 380px, (min-width: 560px) 45vw, 112px" />
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}

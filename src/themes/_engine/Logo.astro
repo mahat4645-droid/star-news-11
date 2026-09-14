@@ -1,0 +1,38 @@
+---
+import { initials, settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+import { asset, url } from '../../lib/url';
+
+interface Props {
+  tagline?: boolean;
+  class?: string;
+}
+
+const { tagline = true, class: className } = Astro.props;
+const name = settings.site_title;
+const words = name.split(/\s+/);
+const last = words.length > 1 ? words.pop() : undefined;
+const logo = (settings as { logo?: string }).logo;
+---
+
+<a href={url()} class:list={['sm-logo', className]} aria-label={`${name} — ${t('home')}`}>
+  {
+    logo ? (
+      <img class="sm-logo__img" src={asset(logo)} alt={name} />
+    ) : (
+      <>
+        <span class="sm-logo__mark" aria-hidden="true">
+          {initials(name).slice(0, 1)}
+        </span>
+        <span class="sm-logo__text">
+          <span class="sm-logo__name">
+            {words.join(' ')}
+            {last ? ' ' : ''}
+            {last && <b>{last}</b>}
+          </span>
+          {tagline && settings.tagline && <span class="sm-logo__tag">{settings.tagline}</span>}
+        </span>
+      </>
+    )
+  }
+</a>

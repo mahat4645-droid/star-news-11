@@ -1,0 +1,24 @@
+---
+import AppBadges from '../../components/widgets/AppBadges.astro';
+import DonateCard from '../../components/widgets/DonateCard.astro';
+import JoinCard from '../../components/widgets/JoinCard.astro';
+import LatestList from '../../components/widgets/LatestList.astro';
+import MostRead from '../../components/widgets/MostRead.astro';
+import QuoteCard from '../../components/widgets/QuoteCard.astro';
+
+interface Props {
+  latest?: boolean;
+  exclude?: string;
+}
+
+const { latest = true, exclude } = Astro.props;
+---
+
+<aside class="sm-layout__side">
+  {latest && <LatestList exclude={exclude} />}
+  <JoinCard />
+  <MostRead exclude={exclude} />
+  <QuoteCard />
+  <AppBadges />
+  <DonateCard />
+</aside>

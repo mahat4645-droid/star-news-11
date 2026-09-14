@@ -1,0 +1,24 @@
+---
+import { Layout } from '@theme';
+import { t } from '../lib/i18n';
+
+// Shown by the service worker in place of a page that couldn't be loaded (no connection, or the server
+// is unreachable). "Try again" retries that same page, and it reloads by itself when the connection returns.
+---
+
+<Layout title={t('offlineTitle')} noindex>
+  <div class="container">
+    <div class="notfound">
+      <p class="notfound__code">{t('offline')}</p>
+      <h1 class="notfound__title">{t('offlineText')}</h1>
+      <p><a class="arrow-link" href="" data-retry>{t('tryAgain')} <span aria-hidden="true">→</span></a></p>
+    </div>
+  </div>
+  <script is:inline>
+    document.querySelector('[data-retry]')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.reload();
+    });
+    addEventListener('online', () => location.reload());
+  </script>
+</Layout>

@@ -1,0 +1,25 @@
+---
+import Icon from '../Icon.astro';
+import { tagUrl } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <nav class="w-trending" aria-label={t('trending')}>
+      <span class="w-trending__label">
+        <Icon name="fire" size={16} />
+        {t('trending')}
+      </span>
+      {tags.map((tag) => (
+        <a href={tagUrl(tag)}>#{tag}</a>
+      ))}
+    </nav>
+  )
+}

@@ -1,0 +1,51 @@
+---
+import StoryCard from '../../components/StoryCard.astro';
+import BlockHead from './BlockHead.astro';
+import { categoryUrl, type Article, type Category } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+// A section with sub-sections (e.g. States → Uttar Pradesh, Bihar…) shown as tabs.
+interface Props {
+  parent: Category;
+  tabs: { category: Category; stories: Article[] }[];
+}
+
+const { parent, tabs } = Astro.props;
+---
+
+<section class="sm-block" style={`--cat:${parent.color}`} aria-labelledby="blk-states">
+  <BlockHead title={parent.name} href={categoryUrl(parent.id)} id="blk-states" />
+  <div data-tabs>
+    <div class="sm-tabs" role="tablist" aria-label={parent.name}>
+      {
+        tabs.map((tab, i) => (
+          <button
+            type="button"
+            role="tab"
+            class="sm-tab"
+            id={`tab-${tab.category.id}`}
+            aria-controls={`panel-${tab.category.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            {tab.category.name}
+          </button>
+        ))
+      }
+    </div>
+    {
+      tabs.map((tab, i) => (
+        <div class="sm-tabpanel" role="tabpanel" id={`panel-${tab.category.id}`} aria-labelledby={`tab-${tab.category.id}`} hidden={i !== 0}>
+          <div class="sm-grid sm-grid--2 sm-grid--mini">
+            {tab.stories.slice(0, 4).map((a) => (
+              <StoryCard article={a} variant="mini" sizes="112px" kicker={false} />
+            ))}
+          </div>
+          <a class="sm-bh__more sm-tabpanel__more" href={categoryUrl(tab.category.id)}>
+            {tab.category.name} — {t('more')} →
+          </a>
+        </div>
+      ))
+    }
+  </div>
+</section>

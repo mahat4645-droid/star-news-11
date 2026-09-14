@@ -1,0 +1,71 @@
+---
+import AgencyCredit from '../../components/AgencyCredit.astro';
+import DemoBar from '../../components/DemoBar.astro';
+import Head from '../../components/Head.astro';
+import Ticker from '../../components/Ticker.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import TabBar from './TabBar.astro';
+import Drawer from './Drawer.astro';
+import { config } from '@theme-config';
+import { brandColor, settings } from '../../lib/content';
+import { lang, t } from '../../lib/i18n';
+import type { LayoutProps } from '../../lib/types';
+
+type Props = LayoutProps;
+const { activeNav, ...head } = Astro.props;
+
+// A client's brand colour from Site settings. Light colours (e.g. yellow) get dark text on top.
+function brandVars(hex?: string): string | undefined {
+  if (!hex) return;
+  const h = hex.replace('#', '');
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h.slice(0, 6);
+  const [r, g, b] = [0, 2, 4]
+    .map((i) => parseInt(full.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  const light = 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.45;
+  return light
+    ? `--brand:${hex};--on-brand:#111;--brand-ink:color-mix(in srgb, ${hex} 55%, #000)`
+    : `--brand:${hex};--on-brand:#fff;--brand-ink:${hex}`;
+}
+---
+
+<!doctype html>
+<html
+  lang={lang}
+  data-locale={settings.locale}
+  data-tz={settings.timezone}
+  style={brandVars(brandColor)}
+  data-theme={config.mode === 'dark' ? 'dark' : undefined}
+  data-topbar={config.topbar}
+  data-header={config.header}
+  data-nav={config.nav}
+  data-hero={config.hero}
+  data-cards={config.cards}
+  data-heads={config.heads}
+  data-footer={config.footer}
+  data-logo={config.logo}
+  data-catcolors={config.categoryColors === false ? 'off' : undefined}
+>
+  <head>
+    <Head {...head} />
+    <meta name="theme-color" content={brandColor ?? config.accent} />
+    <slot name="head" />
+  </head>
+  <body class="sm">
+    <a class="skip-link" href="#main">{t('skip')}</a>
+    <DemoBar />
+    <Header active={activeNav} />
+    <Ticker />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <AgencyCredit />
+    <TabBar active={activeNav} />
+    <Drawer />
+    <script>
+      import '../../scripts/site.ts';
+    </script>
+  </body>
+</html>

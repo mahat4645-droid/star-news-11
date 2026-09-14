@@ -1,0 +1,102 @@
+---
+import CoverImage from './CoverImage.astro';
+import {
+  articleUrl,
+  categoryUrl,
+  coverOf,
+  excerptOf,
+  formatShortDate,
+  getAuthor,
+  getCategory,
+  youtubeId,
+  type Article,
+  type ResolvedImage,
+} from '../lib/content';
+import { t } from '../lib/i18n';
+
+interface Props {
+  article: Article;
+  /**
+   * lead: hero story · stack: medium · standard: grid card · row: thumbnail beside text
+   * mini: small thumbnail row · text: headline only · overlay: headline on top of the photo
+   */
+  variant?: 'lead' | 'stack' | 'standard' | 'row' | 'mini' | 'text' | 'overlay';
+  heading?: 'h2' | 'h3' | 'h4';
+  excerpt?: boolean;
+  image?: boolean;
+  eager?: boolean;
+  sizes?: string;
+  ratio?: string;
+  kicker?: boolean;
+  meta?: boolean;
+  author?: boolean;
+}
+
+const {
+  article,
+  variant = 'standard',
+  heading = 'h3',
+  excerpt = false,
+  image = true,
+  eager = false,
+  sizes,
+  ratio,
+  kicker = true,
+  meta = true,
+  author: showAuthor = true,
+} = Astro.props;
+
+const { data } = article;
+const Heading = heading;
+const url = articleUrl(article);
+const category = await getCategory(data.category);
+const author = showAuthor ? await getAuthor(data.author) : undefined;
+const videoId = youtubeId(data.youtube);
+// Video stories without a cover use the YouTube thumbnail. Both of these are 16:9 (no letterbox bars):
+// small rows get the light 320px version, larger cards the max-res one (with a fallback in site.ts).
+const small = variant === 'row' || variant === 'mini';
+const ownCover = coverOf(article);
+const ytThumb = !ownCover && videoId && !small ? videoId : undefined;
+const cover: ResolvedImage | undefined =
+  ownCover ??
+  (videoId ? { kind: 'url', src: `https://i.ytimg.com/vi/${videoId}/${small ? 'mqdefault' : 'maxresdefault'}.jpg` } : undefined);
+---
+
+<article class:list={['card', `card--${variant}`, { 'has-video': !!videoId }]} style={`--cat:${category.color}`}>
+  {
+    image && (
+      <div class="card__media">
+        <CoverImage image={cover} alt="" sizes={sizes} ratio={ratio} eager={eager} label={category.name} ytThumb={ytThumb} />
+        {videoId && (
+          <span class="play-badge">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            <span>{t('watch')}</span>
+          </span>
+        )}
+      </div>
+    )
+  }
+  <div class="card__body">
+    {
+      kicker && (
+        <div class="card__kicker">
+          {data.breaking && <span class="flag">{t('breaking')}</span>}
+          <a href={categoryUrl(category.id)} class="kicker">{category.name}</a>
+        </div>
+      )
+    }
+    <Heading class="card__title"><a href={url}>{data.title}</a></Heading>
+    {excerpt && <p class="card__excerpt">{excerptOf(article)}</p>}
+    {
+      meta && (
+        <p class="meta">
+          {author && <span>{author.name}</span>}
+          <time datetime={data.date.toISOString()} data-rel>{formatShortDate(data.date)}</time>
+          {data.draft && <span class="flag flag--draft">{t('draft')}</span>}
+        </p>
+      )
+    }
+  </div>
+</article>

@@ -1,0 +1,47 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import { Layout, ListPage } from '@theme';
+import {
+  getArticles,
+  getCategories,
+  getCategory,
+  getChildCategories,
+  inCategory,
+  type Article,
+  type Category,
+} from '../../../lib/content';
+import { t } from '../../../lib/i18n';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const articles = await getArticles();
+  // A section page exists for every category file, plus any category used by a story.
+  const ids = new Set([...(await getCategories()).map((c) => c.id), ...articles.map((a) => a.data.category)]);
+  const pages = await Promise.all(
+    [...ids].map(async (id) => {
+      const match = await inCategory(id);
+      return paginate(articles.filter(match), {
+        params: { slug: id },
+        props: { category: await getCategory(id), subcategories: await getChildCategories(id) },
+        pageSize: 15,
+      });
+    }),
+  );
+  return pages.flat();
+}) satisfies GetStaticPaths;
+
+const { page, category, subcategories } = Astro.props as { page: Page<Article>; category: Category; subcategories: Category[] };
+const title = page.currentPage === 1 ? category.name : t('pageN', { title: category.name, n: page.currentPage });
+---
+
+<Layout title={title} description={category.description || category.name} activeNav={category.id}>
+  <ListPage
+    mode="category"
+    title={category.name}
+    eyebrow={t('section')}
+    description={category.description}
+    color={category.color}
+    stories={page.data}
+    page={page}
+    subcategories={subcategories}
+  />
+</Layout>

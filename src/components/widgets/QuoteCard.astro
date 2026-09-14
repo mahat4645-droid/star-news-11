@@ -1,0 +1,21 @@
+---
+import Icon from '../Icon.astro';
+import { settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+// A different thought every day, chosen in the reader's browser from the list in Site settings.
+const quotes = ((settings as { quotes?: string[] }).quotes ?? []).filter(Boolean);
+const today = quotes.length ? quotes[Math.floor(Date.now() / 86_400_000) % quotes.length] : '';
+---
+
+{
+  quotes.length > 0 && (
+    <section class="w-card w-quote" data-quotes={JSON.stringify(quotes)}>
+      <Icon name="quote" size={30} class="w-quote__icon" />
+      <h2 class="w-quote__title">{t('quoteOfDay')}</h2>
+      <p class="w-quote__text" data-quote-text>
+        {today}
+      </p>
+    </section>
+  )
+}

@@ -1,0 +1,81 @@
+---
+import { t } from '../lib/i18n';
+
+interface Props {
+  url: string;
+  title: string;
+  /** Show a large green "Share on WhatsApp" button first (popular with Indian readers). */
+  whatsappButton?: boolean;
+}
+
+const { url, title, whatsappButton = false } = Astro.props;
+const u = encodeURIComponent(url);
+const tx = encodeURIComponent(title);
+
+const WHATSAPP =
+  'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 1.9 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z';
+const whatsappHref = `https://wa.me/?text=${tx}%20${u}`;
+
+const links = [
+  {
+    name: 'X',
+    href: `https://twitter.com/intent/tweet?url=${u}&text=${tx}`,
+    d: 'M18.9 1.2h3.7l-8 9.2L24 22.8h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.2h7.6l5.2 6.9Zm-1.3 19.5h2L6.5 3.2H4.3Z',
+  },
+  {
+    name: 'Facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+    d: 'M9.1 23.7v-8H6.6V12h2.5v-1.6c0-4.1 1.9-6 5.9-6 .8 0 2.1.2 2.7.3v3.3l-1.4-.1c-2 0-2.7.7-2.7 2.7V12h3.9l-.7 3.7h-3.2v8H9.1Z',
+  },
+  ...(whatsappButton ? [] : [{ name: 'WhatsApp', href: whatsappHref, d: WHATSAPP }]),
+  {
+    name: 'LinkedIn',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}`,
+    d: 'M5 3.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM.5 8h4v15h-4V8Zm7.5 0h3.8v2h.1c.5-1 1.8-2 3.8-2 4.1 0 4.8 2.7 4.8 6.1V23h-4v-7.1c0-1.7 0-3.9-2.4-3.9s-2.7 1.9-2.7 3.8V23H8V8Z',
+  },
+];
+---
+
+<div class="share" role="group" aria-label={t('shareStory')}>
+  {
+    whatsappButton && (
+      <a class="share__wa" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d={WHATSAPP} />
+        </svg>
+        {t('whatsappShare')}
+      </a>
+    )
+  }
+  <button type="button" class="share__btn" data-native-share data-url={url} data-title={title} aria-label={t('share')} hidden>
+    <svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg>
+  </button>
+  {
+    links.map((l) => (
+      <a
+        class="share__btn"
+        href={l.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t('shareOn', { name: l.name })}
+        title={t('shareOn', { name: l.name })}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d={l.d} />
+        </svg>
+      </a>
+    ))
+  }
+  <button
+    type="button"
+    class="share__btn"
+    data-copy={url}
+    data-msg-ok={t('linkCopied')}
+    data-msg-fail={t('copyFailed')}
+    aria-label={t('copyLink')}
+    title={t('copyLink')}
+  >
+    <svg viewBox="0 0 24 24" class="stroke" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg>
+    <span class="share__toast" role="status"></span>
+  </button>
+</div>

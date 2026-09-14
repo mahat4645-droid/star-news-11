@@ -1,0 +1,28 @@
+---
+import type { Page } from 'astro';
+import { t } from '../lib/i18n';
+
+interface Props {
+  page: Page;
+}
+
+const { page } = Astro.props;
+---
+
+{
+  page.lastPage > 1 && (
+    <nav class="pager" aria-label={t('pagination')}>
+      {page.url.prev ? (
+        <a class="pager__btn" href={page.url.prev} rel="prev">{t('newer')}</a>
+      ) : (
+        <span class="pager__btn is-disabled">{t('newer')}</span>
+      )}
+      <span class="pager__info">{t('pageOf', { current: page.currentPage, last: page.lastPage })}</span>
+      {page.url.next ? (
+        <a class="pager__btn" href={page.url.next} rel="next">{t('older')}</a>
+      ) : (
+        <span class="pager__btn is-disabled">{t('older')}</span>
+      )}
+    </nav>
+  )
+}
