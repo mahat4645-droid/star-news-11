@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Newsroom · Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      /* Login screen: a single "पासवर्ड" field. The password is this site's GitHub access token
+         (see the client README), so the "Sign in with GitHub" option is hidden. */
+      button[data-label^='Sign In with'] {
+        display: none !important;
+      }
+      .login-title,
+      button[data-label='Sign In Using Access Token'] .label > span,
+      dialog[aria-label='Sign In Using Access Token'] [id$='-title'],
+      dialog[aria-label='Sign In Using Access Token'] .body,
+      dialog[aria-label='Sign In Using Access Token'] button .label > span {
+        font-size: 0 !important;
+      }
+      .login-title::after {
+        content: 'एडमिन पैनल';
+        font-size: 1.4rem;
+      }
+      button[data-label='Sign In Using Access Token'] .label > span::after {
+        content: 'पासवर्ड से लॉगिन करें';
+        font-size: 14px;
+      }
+      dialog[aria-label='Sign In Using Access Token'] [id$='-title']::after {
+        content: 'लॉगिन करें';
+        font-size: 16px;
+      }
+      dialog[aria-label='Sign In Using Access Token'] .body::before {
+        content: 'अपना पासवर्ड डालें';
+        display: block;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+      dialog[aria-label='Sign In Using Access Token'] .body a {
+        display: none;
+      }
+      dialog[aria-label='Sign In Using Access Token'] .input-outer {
+        font-size: 15px;
+      }
+      dialog[aria-label='Sign In Using Access Token'] button[data-label='Sign In'] .label > span::after {
+        content: 'लॉगिन';
+        font-size: 14px;
+      }
+      dialog[aria-label='Sign In Using Access Token'] button[data-label='Cancel'] .label > span::after {
+        content: 'रद्द करें';
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sveltia CMS: free, open-source, Git-based admin panel. Configuration lives in ./config.yml -->
+    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <script>
+      // Adds a "YouTube" button to the story editor so videos can be placed anywhere inside an article.
+      const ytId = (value = '') => {
+        const s = value.trim();
+        if (/^[\w-]{11}$/.test(s)) return s;
+        const m = s.match(/(?:youtu\.be\/|[?&]v=|\/(?:embed|shorts|live)\/)([\w-]{11})/);
+        return m ? m[1] : s;
+      };
+      window.CMS?.registerEditorComponent?.({
+        id: 'youtube',
+        label: 'YouTube video',
+        fields: [{ name: 'id', label: 'YouTube link or video ID', widget: 'string' }],
+        pattern: /^<div class="yt-embed" data-yt="([^"]*)"><\/div>$/m,
+        fromBlock: (match) => ({ id: match[1] }),
+        toBlock: ({ id }) => `<div class="yt-embed" data-yt="${ytId(id)}"></div>`,
+        toPreview: ({ id }) => `<img src="https://i.ytimg.com/vi/${ytId(id)}/hqdefault.jpg" alt="YouTube video" style="max-width:100%">`,
+      });
+
+      // Login screen: the token box becomes a password box (hidden characters, browsers can save it),
+      // and on the live site it opens straight away. On localhost "Work with Local Repository" stays available.
+      const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+      let loginOpened = false;
+      new MutationObserver(() => {
+        const title = document.querySelector('h1:not(.login-title)');
+        if (title?.textContent.trim() === 'Sveltia CMS') title.classList.add('login-title');
+        const input = document.querySelector('dialog[aria-label="Sign In Using Access Token"] input[type="text"]');
+        if (input) {
+          input.type = 'password';
+          input.autocomplete = 'current-password';
+          input.placeholder = 'पासवर्ड';
+        }
+        const open = document.querySelector('button[data-label="Sign In Using Access Token"]');
+        if (open && !loginOpened && !isLocal) {
+          loginOpened = true;
+          open.click();
+        }
+      }).observe(document.documentElement, { childList: true, subtree: true });
+    </script>
+  </body>
+</html>

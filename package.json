@@ -1,0 +1,52 @@
+{
+  "name": "newzportal",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "icons": "node scripts/app-icons.mjs",
+    "new-client": "node scripts/new-client.mjs",
+    "app": "node scripts/app.mjs",
+    "app:preview": "node tools/app-preview.mjs 4410",
+    "cleanup": "node scripts/cleanup-old-stories.mjs",
+    "showcase": "node showcase/build.mjs",
+    "showcase:shots": "node showcase/shots.mjs",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/share": "^8.0.1",
+    "@fontsource-variable/anek-devanagari": "^5.3.0",
+    "@fontsource-variable/baloo-2": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/newsreader": "^5.3.0",
+    "@fontsource-variable/noto-sans-devanagari": "^5.3.0",
+    "@fontsource-variable/noto-serif-devanagari": "^5.3.0",
+    "@fontsource/hind": "^5.3.0",
+    "@fontsource/khand": "^5.3.0",
+    "@fontsource/martel": "^5.3.0",
+    "@fontsource/mukta": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "@fontsource/rozha-one": "^5.3.0",
+    "@fontsource/tiro-devanagari-hindi": "^5.3.0",
+    "astro": "^7.3.2",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.4"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.1",
+    "pagefind": "^1.5.2"
+  }
+}

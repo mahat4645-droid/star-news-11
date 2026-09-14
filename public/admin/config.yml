@@ -1,0 +1,301 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Ananta Newz admin panel — Sveltia CMS (https://sveltiacms.app/en/docs)
+#  Every "Save" in the admin commits to GitHub; your host rebuilds the site
+#  automatically (about a minute). No server, no database, no monthly bill.
+# ─────────────────────────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: mahat4645-droid/star-news-11
+  branch: main
+
+site_url: https://star-news-11.pages.dev
+display_url: https://star-news-11.pages.dev
+logo_url: /favicon.svg
+
+# Site-wide uploads (logo, author photos). Story images are stored inside each story's folder.
+media_folder: /public/uploads
+public_folder: /uploads
+
+# Uploaded photos are converted to WebP and capped at 2400px before they are committed.
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2400
+          height: 2400
+
+# Web addresses use Latin letters. Each story asks for its own short English URL (e.g. "up-flood-alert").
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+collections:
+  # ─────────────────────────────────────────────────────────── Stories
+  - name: articles
+    label: खबरें (Stories)
+    label_singular: खबर (Story)
+    icon: newspaper
+    description: News articles, video stories and features.
+    folder: src/content/articles
+    path: '{{slug}}/index'
+    slug: '{{fields._slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    summary: '{{title}}'
+    sortable_fields:
+      fields: [date, title, category]
+      default:
+        field: date
+        direction: descending
+    view_filters:
+      - { label: Featured, field: featured, pattern: true }
+      - { label: Breaking, field: breaking, pattern: true }
+      - { label: Drafts, field: draft, pattern: true }
+    view_groups:
+      - { label: Category, field: category }
+    fields:
+      - { label: शीर्षक (Headline), name: title, widget: string }
+      - label: सारांश (Summary)
+        name: excerpt
+        widget: text
+        required: false
+        hint: One or two sentences shown under the headline and in story cards.
+      - label: श्रेणी (Category)
+        name: category
+        widget: relation
+        collection: categories
+        value_field: '{{slug}}'
+        search_fields: [name]
+        display_fields: [name]
+      - label: लेखक (Author)
+        name: author
+        widget: relation
+        collection: authors
+        value_field: '{{slug}}'
+        search_fields: [name]
+        display_fields: [name]
+        required: false
+      - { label: तारीख (Publish date), name: date, widget: datetime, default: '{{now}}', input_timezone: Asia/Kolkata, output_utc: true }
+      - { label: मुख्य फोटो (Cover image), name: cover, widget: image, required: false, choose_url: true }
+      - label: फोटो विवरण (Alt text)
+        name: cover_alt
+        widget: string
+        required: false
+        hint: Describe the photo for readers using screen readers.
+      - { label: कैप्शन / फोटो क्रेडिट (Caption), name: cover_caption, widget: string, required: false }
+      - label: YouTube वीडियो
+        name: youtube
+        widget: string
+        required: false
+        hint: Paste any YouTube link. It becomes the lead video and the story appears in Videos.
+      - { label: टैग (Tags), name: tags, widget: list, required: false }
+      - label: फीचर्ड (Featured)
+        name: featured
+        widget: boolean
+        default: false
+        hint: Featured stories lead the homepage and the "Most read" list.
+      - label: ब्रेकिंग न्यूज़ (Breaking)
+        name: breaking
+        widget: boolean
+        default: false
+        hint: Shows the story in the red "Breaking" ticker on every page.
+      - label: ड्राफ्ट (Draft)
+        name: draft
+        widget: boolean
+        default: false
+        hint: Drafts are saved but hidden from the live site.
+      - { label: खबर (Story), name: body, widget: markdown }
+
+  # ─────────────────────────────────────────────────────── Web stories
+  - name: webstories
+    label: वेब स्टोरीज़ (Web stories)
+    label_singular: वेब स्टोरी (Web story)
+    icon: auto_stories
+    description: Tap-through photo stories (AMP Web Stories, eligible for Google Discover).
+    folder: src/content/webstories
+    path: '{{slug}}/index'
+    slug: '{{fields._slug}}'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - { label: शीर्षक (Title), name: title, widget: string }
+      - { label: तारीख (Publish date), name: date, widget: datetime, default: '{{now}}', input_timezone: Asia/Kolkata, output_utc: true }
+      - label: कवर फोटो (Cover, portrait 9:16)
+        name: cover
+        widget: image
+        required: false
+        hint: Tall photo shown first. If empty, the first slide's photo is used.
+      - label: स्लाइड (Slides)
+        name: slides
+        widget: list
+        min: 1
+        fields:
+          - { label: फोटो (Portrait photo), name: image, widget: image }
+          - { label: हेडिंग (Heading), name: heading, widget: string, required: false }
+          - { label: टेक्स्ट (Text), name: text, widget: text, required: false }
+          - { label: फोटो क्रेडिट (Credit), name: credit, widget: string, required: false }
+      - label: पूरी खबर का लिंक (Link to full story)
+        name: link
+        widget: string
+        required: false
+        hint: Optional, e.g. /news/your-story/ — shown as a "Read the full story" button on the last slide.
+      - { label: ड्राफ्ट (Draft), name: draft, widget: boolean, default: false }
+
+  # ─────────────────────────────────────────────────────── Categories
+  - name: categories
+    label: श्रेणियां (Categories)
+    label_singular: श्रेणी (Category)
+    icon: category
+    folder: src/content/categories
+    create: true
+    delete: true
+    extension: json
+    format: json
+    identifier_field: name
+    slug: '{{fields._slug}}'
+    summary: '{{name}}'
+    sortable_fields: [order, name]
+    fields:
+      - { label: नाम (Name), name: name, widget: string }
+      - { label: विवरण (Description), name: description, widget: text, required: false }
+      - { label: रंग (Accent colour), name: color, widget: color, required: false }
+      - label: मेन्यू क्रम (Menu position)
+        name: order
+        widget: number
+        value_type: int
+        default: 10
+        hint: Lower numbers appear first in the menu and on the homepage.
+      - label: मुख्य श्रेणी (Parent section)
+        name: parent
+        widget: relation
+        collection: categories
+        value_field: '{{slug}}'
+        search_fields: [name]
+        display_fields: [name]
+        required: false
+        hint: Optional. For sub-sections, e.g. "उत्तर प्रदेश" inside "राज्य".
+
+  # ──────────────────────────────────────────────────────────── Authors
+  - name: authors
+    label: लेखक (Authors)
+    label_singular: लेखक (Author)
+    icon: person
+    folder: src/content/authors
+    create: true
+    delete: true
+    extension: json
+    format: json
+    identifier_field: name
+    slug: '{{fields._slug}}'
+    media_folder: /public/uploads/authors
+    public_folder: /uploads/authors
+    fields:
+      - { label: नाम (Name), name: name, widget: string }
+      - { label: पद (Role), name: role, widget: string, required: false }
+      - { label: परिचय (Short bio), name: bio, widget: text, required: false }
+      - { label: फोटो (Photo), name: avatar, widget: image, required: false }
+      - { label: X / Twitter URL, name: x, widget: string, required: false }
+
+  # ─────────────────────────────────────────────────────────────── Pages
+  - name: pages
+    label: पेज (Pages)
+    label_singular: पेज (Page)
+    icon: description
+    description: Static pages such as About, Contact and Privacy — linked in the footer.
+    folder: src/content/pages
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: '{{fields._slug}}'
+    media_folder: /public/uploads/pages
+    public_folder: /uploads/pages
+    fields:
+      - { label: शीर्षक (Title), name: title, widget: string }
+      - { label: विवरण (Description), name: description, widget: text, required: false }
+      - { label: सामग्री (Content), name: body, widget: markdown }
+
+  # ────────────────────────────────────────────────────── Site settings
+  - name: settings
+    label: सेटिंग्स (Settings)
+    icon: settings
+    files:
+      - name: site
+        label: साइट सेटिंग्स (Site settings)
+        file: src/data/settings.json
+        fields:
+          - { label: थीम (Theme), name: theme, widget: hidden, default: suryoday }
+          - label: भाषा (Interface language)
+            name: language
+            widget: select
+            options:
+              - { label: हिन्दी, value: hi }
+              - { label: English, value: en }
+          - { label: साइट का नाम (Site name), name: site_title, widget: string }
+          - { label: टैगलाइन (Tagline), name: tagline, widget: string }
+          - { label: Google के लिए विवरण (Description), name: description, widget: text }
+          - label: लोगो (Logo)
+            name: logo
+            widget: image
+            required: false
+            hint: Optional. Without a logo, the site name is shown as a styled text logo.
+          - { label: ब्रांड रंग (Brand colour), name: brand_color, widget: color }
+          - label: साइट का पता (Site URL)
+            name: site_url
+            widget: string
+            hint: Your live address, e.g. https://anantanewz.pages.dev — used for sharing links, RSS and the sitemap.
+          - { label: Date format (locale), name: locale, widget: string, default: hi-IN, hint: 'e.g. hi-IN, en-IN, en-US' }
+          - { label: Time zone, name: timezone, widget: string, default: Asia/Kolkata }
+          - { label: ब्रेकिंग टिकर दिखाएं (Show breaking ticker), name: show_ticker, widget: boolean, default: true }
+          - { label: टिकर लेबल (Ticker label), name: ticker_label, widget: string, default: ब्रेकिंग }
+          - { label: WhatsApp चैनल लिंक, name: whatsapp_channel, widget: string, required: false }
+          - { label: Telegram लिंक, name: telegram_channel, widget: string, required: false }
+          - { label: पुरानी खबरें अपने-आप हटाएं — कितने दिन बाद (Auto-delete old stories after N days), name: auto_delete_days, widget: number, value_type: int, min: 0, required: false, hint: 'इतने दिन से पुरानी खबरें और वेब स्टोरीज़ हर रात अपने-आप हट जाएंगी (नई 20 खबरें हमेशा रहेंगी)। 0 = कभी न हटाएं।' }
+          - label: ऐप लिंक (App links)
+            name: app
+            widget: object
+            fields:
+              - { label: Google Play URL, name: play_store, widget: string, required: false }
+              - { label: App Store URL, name: app_store, widget: string, required: false }
+              - { label: Android ऐप फ़ाइल (APK link), name: android_apk, widget: string, required: false, hint: 'Direct download, e.g. /download/app.apk — npm run new-client fills this in.' }
+          - label: सोशल लिंक (Social links)
+            name: social
+            widget: object
+            fields:
+              - { label: X (Twitter), name: x, widget: string, required: false }
+              - { label: Facebook, name: facebook, widget: string, required: false }
+              - { label: Instagram, name: instagram, widget: string, required: false }
+              - { label: YouTube, name: youtube, widget: string, required: false }
+              - { label: WhatsApp, name: whatsapp, widget: string, required: false }
+          - label: आज का सुविचार (Thoughts of the day)
+            name: quotes
+            widget: list
+            required: false
+            field: { label: सुविचार (Quote), name: quote, widget: text }
+            hint: One is shown each day, in rotation.
+          - label: सहयोग (Donations via UPI)
+            name: donate
+            widget: object
+            fields:
+              - { label: UPI ID, name: upi_id, widget: string, required: false, hint: 'e.g. yourname@okaxis — leave empty to hide the donation box.' }
+              - { label: प्राप्तकर्ता नाम (Payee name), name: payee_name, widget: string, required: false }
+              - { label: संदेश (Message), name: note, widget: text, required: false }
+          - { label: फुटर नोट (Footer note), name: footer_note, widget: text, required: false }
