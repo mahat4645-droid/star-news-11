@@ -4,7 +4,7 @@ excerpt: मकान मालिक पक्ष पर जबरन साम
 category: crime
 author: ''
 date: 2026-09-15T18:41:00Z
-cover: 520004.webp
+cover: 520013.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
