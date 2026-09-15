@@ -5,18 +5,19 @@
   "tagline": "साथ सच का",
   "description": "STAR NEWS 11 — रुड़की, हरिद्वार और उत्तराखंड की ताज़ा खबरें। साथ सच का।",
   "logo": "/uploads/logo.png",
-  "brand_color": "",
+  "brand_color": "#0000ff",
   "site_url": "https://star-news-11.pages.dev",
   "locale": "hi-IN",
   "timezone": "Asia/Kolkata",
   "show_ticker": true,
   "ticker_label": "ब्रेकिंग",
-  "auto_delete_days": 5,
   "whatsapp_channel": "",
   "telegram_channel": "",
+  "auto_delete_days": 10,
   "app": {
     "play_store": "",
-    "app_store": ""
+    "app_store": "",
+    "android_apk": ""
   },
   "social": {
     "x": "",
