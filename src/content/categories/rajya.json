@@ -1,1 +1,7 @@
-{ "name": "राज्य", "description": "आपके राज्य और शहर की हर खबर।", "color": "#ea580c", "order": 2 }
+{
+  "name": "उत्तराखंड",
+  "description": "आपके राज्य और शहर की हर खबर।",
+  "color": "#0000ff",
+  "order": 2,
+  "parent": ""
+}
