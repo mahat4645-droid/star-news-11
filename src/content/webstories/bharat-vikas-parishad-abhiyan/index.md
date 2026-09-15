@@ -11,6 +11,6 @@ slides:
     heading: अभियान की जानकारी देते हुवे भारत विकास परिषद के पदाधिकारी एवं प्रकल्प संयोजक सचिन गुप्ता
     text: ''
     credit: ''
-link: ''
+link: https://www.facebook.com/share/v/1H5qwceDhY/
 draft: false
 ---
