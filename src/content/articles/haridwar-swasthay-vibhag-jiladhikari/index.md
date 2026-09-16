@@ -1,7 +1,7 @@
 ---
 title: अस्पतालों की बदहाल व्यवस्थाओं पर डीएम सख्त!
 excerpt: मरीज-तीमारदारों को मिलेगी बेहतर सुविधा, मेला अस्पताल के आसपास अतिक्रमण पर चलेगा अभियान
-category: rajya
+category: uttarakhand-haridwar
 author: ''
 date: 2026-09-16T12:15:00Z
 cover: 523350.webp
