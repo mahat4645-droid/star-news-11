@@ -4,7 +4,7 @@ excerpt: सिडकुल की 9 कंपनियां पहुंची
 category: rajniti
 author: ''
 date: 2026-09-16T12:25:00Z
-cover: ''
+cover: 523461.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
