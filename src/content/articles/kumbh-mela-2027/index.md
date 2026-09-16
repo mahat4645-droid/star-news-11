@@ -4,7 +4,7 @@ excerpt: पुल-सड़क से लेकर पार्किंग औ
 category: uttarakhand-haridwar
 author: ''
 date: 2026-09-16T16:52:00Z
-cover: 524755.webp
+cover: 524717.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
