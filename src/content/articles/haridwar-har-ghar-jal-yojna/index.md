@@ -6,7 +6,7 @@ excerpt: |-
 category: rajya
 author: ''
 date: 2026-09-16T12:21:00Z
-cover: ''
+cover: 523438.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
