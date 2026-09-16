@@ -1,7 +1,7 @@
 ---
 title: पूल आवासों की बदहाली पर CDO का सख्त रुख, अफसरों को मिला ‘एक्शन प्लान’!
 excerpt: मरम्मत से लेकर सुरक्षा तक—हर खामी का होगा त्वरित समाधान, शनिवार को लगेगा विशेष कैंप
-category: rajya
+category: uttarakhand-haridwar
 author: ''
 date: 2026-09-16T12:32:00Z
 cover: 523455.webp
