@@ -1,7 +1,7 @@
 ---
 title: कुंभ-2027 के निर्माण कार्यों में लापरवाही बर्दाश्त नहीं!
 excerpt: STAR NEWS 11 EXCLUSIVE | हरिद्वार
-category: rajya
+category: uttarakhand-haridwar
 author: ''
 date: 2026-09-15T18:03:00Z
 cover: 519949.webp
