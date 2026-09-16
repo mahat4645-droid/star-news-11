@@ -9,7 +9,7 @@ cover_alt: ''
 cover_caption: ''
 youtube: ''
 tags:
-  - कुम्भ मेला - 2027
+  - कुम्भ मेला 2027
 featured: true
 breaking: true
 draft: false
