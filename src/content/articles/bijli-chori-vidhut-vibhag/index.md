@@ -9,7 +9,7 @@ cover_alt: ''
 cover_caption: ''
 youtube: ''
 tags:
-  - '#बिजली चोरी'
+  - बिजली चोरी
 featured: true
 breaking: true
 draft: false
