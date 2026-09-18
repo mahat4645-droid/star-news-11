@@ -4,7 +4,7 @@ excerpt: टांडा भनेड़ा के जंगल में गो
 category: crime
 author: ''
 date: 2026-09-17T18:23:00Z
-cover: ''
+cover: 532007.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
