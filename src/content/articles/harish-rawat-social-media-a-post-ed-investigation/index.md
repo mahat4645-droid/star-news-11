@@ -7,7 +7,7 @@ excerpt: |-
 category: rajniti
 author: ''
 date: 2026-09-18T17:21:00Z
-cover: ''
+cover: 535698.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
