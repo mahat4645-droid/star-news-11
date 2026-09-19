@@ -14,7 +14,7 @@ tags:
   - CM DHAMI
 featured: true
 breaking: true
-draft: false
+draft: true
 ---
 
 **रुड़की संवाददाता | आसिफ खान**
