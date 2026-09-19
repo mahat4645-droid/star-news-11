@@ -9,7 +9,9 @@ date: 2026-09-19T14:03:00Z
 cover: 539399.webp
 cover_alt: ''
 cover_caption: ''
-photos: []
+photos:
+  - image: 539399.webp
+    caption: ''
 youtube: ''
 facebook: ''
 tags: []
