@@ -24,7 +24,14 @@ const articles = defineCollection({
     cover: optionalText,
     cover_alt: optionalText,
     cover_caption: optionalText,
+    // Up to 3 extra photos shown under the story text.
+    photos: z
+      .array(z.object({ image: z.string(), caption: optionalText }))
+      .nullish()
+      .transform((v) => (v ?? []).filter((p) => p?.image).slice(0, 3)),
     youtube: optionalText,
+    // A Facebook video/reel link, used as the lead media when there is no YouTube link.
+    facebook: optionalText,
     tags: z
       .array(z.string())
       .nullish()

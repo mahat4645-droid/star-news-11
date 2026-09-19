@@ -1,0 +1,36 @@
+---
+// Extra photos of a story (up to 3), added in the admin panel under "और फोटो".
+// They are shown as a row under the story text, with captions.
+import CoverImage from './CoverImage.astro';
+import { resolveImage, type Article } from '../lib/content';
+import { t } from '../lib/i18n';
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const photos = ((article.data as { photos?: { image: string; caption?: string }[] }).photos ?? [])
+  .slice(0, 3)
+  .map((p) => ({ image: resolveImage(p.image, article.filePath), caption: p.caption }))
+  .filter((p) => p.image);
+---
+
+{
+  photos.length > 0 && (
+    <div class:list={['story-photos', `story-photos--${photos.length}`]} aria-label={t('photos')}>
+      {photos.map((p) => (
+        <figure>
+          <CoverImage
+            image={p.image}
+            alt={p.caption ?? ''}
+            ratio="4 / 3"
+            widths={[360, 560, 800, 1100]}
+            sizes="(min-width: 900px) 360px, 92vw"
+          />
+          {p.caption && <figcaption>{p.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  )
+}

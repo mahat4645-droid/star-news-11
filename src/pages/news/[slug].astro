@@ -14,6 +14,7 @@ import {
   readingTime,
   settings,
   youtubeId,
+  facebookUrl,
   type Article,
 } from '../../lib/content';
 
@@ -30,6 +31,7 @@ const parentCategory = category.parent ? await getCategory(category.parent) : un
 
 const cover = coverOf(article);
 const videoId = youtubeId(data.youtube);
+const fbVideo = videoId ? undefined : facebookUrl(data.facebook);
 const pageUrl = new URL(articleUrl(article), Astro.site).href;
 const description = excerptOf(article, 200);
 
@@ -98,6 +100,7 @@ const jsonLd = {
     author={author}
     cover={cover}
     videoId={videoId}
+    fbVideo={fbVideo}
     pageUrl={pageUrl}
     ratio={ratio}
     related={related}

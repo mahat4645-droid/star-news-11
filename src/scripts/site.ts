@@ -295,3 +295,161 @@ document.addEventListener('keydown', (e) => {
   if (box) box.focus();
   else location.href = url('search/');
 });
+
+/* --------------------------------------------- Facebook & Instagram posts */
+// Added inside a story with the admin panel's "Facebook वीडियो / पोस्ट" and "Instagram पोस्ट / रील" blocks.
+function socialFrame(src: string, title: string): HTMLIFrameElement {
+  const frame = document.createElement('iframe');
+  frame.src = src;
+  frame.title = title;
+  frame.loading = 'lazy';
+  frame.allow = 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share';
+  frame.allowFullscreen = true;
+  return frame;
+}
+document.querySelectorAll<HTMLElement>('.fb-embed[data-url]').forEach((el) => {
+  let link: URL;
+  try {
+    link = new URL((el.dataset.url ?? '').trim());
+  } catch {
+    return el.remove();
+  }
+  if (!/(^|\.)(facebook\.com|fb\.watch)$/.test(link.hostname)) return el.remove();
+  const video = link.hostname.endsWith('fb.watch') || link.searchParams.has('v') || /\/(videos?|watch|reel|share\/v|share\/r)(\/|$)/.test(link.pathname);
+  el.classList.add(video ? 'fb-embed--video' : 'fb-embed--post');
+  el.replaceChildren(
+    socialFrame(`https://www.facebook.com/plugins/${video ? 'video' : 'post'}.php?href=${encodeURIComponent(link.href)}&show_text=${video ? 'false' : 'true'}`, 'Facebook'),
+  );
+});
+document.querySelectorAll<HTMLElement>('.ig-embed[data-url]').forEach((el) => {
+  const match = (el.dataset.url ?? '').match(/instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]+)/);
+  if (!match) return el.remove();
+  const kind = match[1].startsWith('reel') ? 'reel' : match[1];
+  el.replaceChildren(socialFrame(`https://www.instagram.com/${kind}/${match[2]}/embed/captioned/`, 'Instagram'));
+});
+
+/* ------------------------------------------------------ install as an app */
+// Android and desktop Chrome/Edge: the browser's own install prompt. iPhone/iPad: Safari has no install
+// button, so the bar explains "Share → Add to Home Screen". Hidden once installed, or for a week when closed.
+type InstallPrompt = Event & { prompt(): Promise<void> };
+const installBar = document.querySelector<HTMLElement>('[data-install-bar]');
+const installTriggers = document.querySelectorAll<HTMLElement>('[data-install-trigger]');
+const standalone = matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let installPrompt: InstallPrompt | undefined;
+
+const installDismissed = () => {
+  try {
+    return Number(localStorage.getItem('install-dismissed')) > Date.now();
+  } catch {
+    return false;
+  }
+};
+function showInstall(mode: 'prompt' | 'ios' | 'help', force = false) {
+  if (!installBar || standalone || (!force && installDismissed())) return;
+  installBar.dataset.mode = mode;
+  installBar.hidden = false;
+}
+const hideInstall = () => {
+  if (installBar) installBar.hidden = true;
+};
+
+addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e as InstallPrompt;
+  installTriggers.forEach((b) => (b.hidden = false));
+  setTimeout(() => showInstall('prompt'), 3000);
+});
+addEventListener('appinstalled', () => {
+  installPrompt = undefined;
+  hideInstall();
+  installTriggers.forEach((b) => (b.hidden = true));
+});
+if (ios && !standalone) {
+  installTriggers.forEach((b) => (b.hidden = false));
+  // A real install button (if the browser offers one) always wins over the iPhone steps.
+  setTimeout(() => !installPrompt && showInstall('ios'), 5000);
+}
+
+document.addEventListener('click', async (e) => {
+  const target = e.target as Element;
+  if (target.closest?.('[data-install-close]')) {
+    hideInstall();
+    try {
+      localStorage.setItem('install-dismissed', String(Date.now() + 7 * 86_400_000));
+    } catch {}
+    return;
+  }
+  if (!target.closest?.('[data-install-go], [data-install-trigger]')) return;
+  drawer?.close();
+  if (installPrompt) {
+    hideInstall();
+    await installPrompt.prompt().catch(() => {});
+    installPrompt = undefined;
+  } else showInstall(ios ? 'ios' : 'help', true);
+});
+
+/* ------------------------------------------------------- copy protection */
+// Settings → खबर कॉपी होने से रोकें. The CSS in base.css stops selection; this stops the rest.
+// It only makes casual copying harder — the page source and screenshots are still there.
+if (document.documentElement.hasAttribute('data-protect')) {
+  const editable = (el: EventTarget | null) => !!(el as Element)?.closest?.('input, textarea, select, [contenteditable]');
+  for (const type of ['contextmenu', 'copy', 'cut', 'dragstart', 'selectstart'] as const) {
+    document.addEventListener(type, (e) => {
+      if (!editable(e.target)) e.preventDefault();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && ['c', 'x', 'a', 'u', 's', 'p'].includes(key) && !editable(e.target)) e.preventDefault();
+  });
+}
+
+/* ------------------------------------------- live YouTube subscriber count */
+// widgets/FollowCard.astro shows the numbers typed in Settings. When a channel and an API key are
+// filled in, the live numbers replace them here (in the browser, so they stay fresh without a rebuild).
+// The answer is cached for six hours to keep well inside the free API quota.
+const followCard = document.querySelector<HTMLElement>('[data-follow][data-yt-channel][data-yt-key]');
+if (followCard) {
+  const channel = followCard.dataset.ytChannel!;
+  const key = followCard.dataset.ytKey!;
+  const cacheKey = `yt-stats:${channel}`;
+  const compact = (n: string) => Intl.NumberFormat('en-IN', { notation: 'compact', maximumFractionDigits: 1 }).format(Number(n));
+
+  const paint = (stats: { subscriberCount?: string; viewCount?: string }) => {
+    const subs = followCard.querySelector<HTMLElement>('[data-count="youtube"]');
+    const views = followCard.querySelector<HTMLElement>('[data-count="views"]');
+    if (subs && stats.subscriberCount) subs.textContent = compact(stats.subscriberCount);
+    if (views && stats.viewCount) {
+      views.textContent = `${compact(stats.viewCount)} ${views.dataset.label ?? ''}`.trim();
+      views.hidden = false;
+    }
+  };
+
+  const cached = (() => {
+    try {
+      const raw = localStorage.getItem(cacheKey);
+      if (!raw) return;
+      const { at, stats } = JSON.parse(raw);
+      return Date.now() - at < 6 * 3_600_000 ? stats : undefined;
+    } catch {
+      return;
+    }
+  })();
+
+  if (cached) paint(cached);
+  else {
+    const param = channel.startsWith('UC') ? `id=${encodeURIComponent(channel)}` : `forHandle=${encodeURIComponent(channel.replace(/^@/, ''))}`;
+    fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&${param}&key=${encodeURIComponent(key)}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data) => {
+        const stats = data?.items?.[0]?.statistics;
+        if (!stats) return;
+        paint(stats);
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), stats }));
+        } catch {}
+      })
+      .catch(() => {}); // a wrong key or no network: the typed numbers stay on screen
+  }
+}

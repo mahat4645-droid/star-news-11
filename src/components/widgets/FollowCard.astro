@@ -1,0 +1,71 @@
+---
+// "हमसे जुड़ें" — Facebook, Instagram and YouTube with their follower counts.
+// The numbers are typed in Settings → फॉलोअर्स. If a YouTube channel and API key are filled in too,
+// src/scripts/site.ts replaces the YouTube numbers with the live ones from the browser.
+import Icon from '../Icon.astro';
+import { settings } from '../../lib/content';
+import { t } from '../../lib/i18n';
+
+type Follow = {
+  show?: boolean;
+  facebook?: string;
+  instagram?: string;
+  youtube?: string;
+  youtube_views?: string;
+  youtube_channel?: string;
+  youtube_api_key?: string;
+};
+
+const follow = ((settings as { follow?: Follow }).follow ?? {}) as Follow;
+const links: Record<string, string> = settings.social ?? {};
+const live = !!(follow.youtube_channel?.trim() && follow.youtube_api_key?.trim());
+
+const rows = (
+  [
+    ['facebook', 'Facebook', follow.facebook, t('followers'), t('follow')],
+    ['instagram', 'Instagram', follow.instagram, t('followers'), t('follow')],
+    ['youtube', 'YouTube', follow.youtube, t('subscribers'), t('subscribe')],
+  ] as const
+)
+  .filter(([key, , count]) => links[key] && ((count ?? '').trim() || (key === 'youtube' && live)))
+  .map(([key, label, count, unit, action]) => ({ key, label, count: (count ?? '').trim(), unit, action }));
+
+const show = follow.show !== false && rows.length > 0;
+const views = (follow.youtube_views ?? '').trim();
+---
+
+{
+  show && (
+    <section
+      class="w-card w-follow"
+      data-follow
+      data-yt-channel={live ? follow.youtube_channel!.trim() : undefined}
+      data-yt-key={live ? follow.youtube_api_key!.trim() : undefined}
+    >
+      <h2 class="w-card__title">{t('followTitle')}</h2>
+      <ul class="w-follow__list">
+        {rows.map((row) => (
+          <li class={`w-follow__row w-follow__row--${row.key}`}>
+            <span class="w-follow__icon" aria-hidden="true">
+              <Icon name={row.key} size={20} />
+            </span>
+            <span class="w-follow__text">
+              <b class="w-follow__count" data-count={row.key}>
+                {row.count || '—'}
+              </b>
+              <span class="w-follow__unit">{row.unit}</span>
+              {row.key === 'youtube' && (views || live) && (
+                <span class="w-follow__views" data-count="views" data-label={t('views')} hidden={!views}>
+                  {views} {t('views')}
+                </span>
+              )}
+            </span>
+            <a class="w-follow__btn" href={links[row.key]} target="_blank" rel="noopener">
+              {row.action}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

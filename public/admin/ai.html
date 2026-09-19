@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>AI से खबर लिखें · Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <style>
+      :root {
+        --bg: #f4f4f6;
+        --card: #fff;
+        --text: #17171b;
+        --muted: #5e6068;
+        --line: #e3e3e8;
+        --accent: #6d28d9;
+        --ok: #15803d;
+        --warn: #b45309;
+        font: 16px/1.55 'Noto Sans Devanagari', 'Mukta', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        background: #1f1b2e;
+        color: #fff;
+      }
+      header a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      header h1 {
+        flex: 1;
+        margin: 0;
+        font-size: 18px;
+      }
+      main {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 20px 16px 60px;
+        display: grid;
+        gap: 18px;
+      }
+      .step {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 20px 20px;
+      }
+      .step h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 6px;
+        font-size: 18px;
+      }
+      .num {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        font-size: 15px;
+        flex: none;
+      }
+      .step p {
+        margin: 0 0 12px;
+        color: var(--muted);
+      }
+      textarea {
+        width: 100%;
+        min-height: 190px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font: 14px/1.6 inherit;
+        font-family: inherit;
+        color: var(--text);
+        background: #fbfbfc;
+        resize: vertical;
+      }
+      #answer {
+        min-height: 220px;
+        background: #fff;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+      }
+      button,
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 22px;
+        font: 700 15px/1 inherit;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .secondary {
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .big {
+        min-height: 52px;
+        font-size: 17px;
+        padding: 0 26px;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .status {
+        margin-top: 10px;
+        font-weight: 600;
+      }
+      .status.ok {
+        color: var(--ok);
+      }
+      .status.bad {
+        color: #b91c1c;
+      }
+      .fields {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .field {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: #fbfbfc;
+      }
+      .field__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .field__head button {
+        min-height: 32px;
+        padding: 0 12px;
+        font-size: 13px;
+        background: #ede9fe;
+        color: #4c1d95;
+      }
+      .field__value {
+        margin-top: 4px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        max-height: 220px;
+        overflow: auto;
+      }
+      .warn {
+        color: var(--warn);
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .tip {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AI से खबर लिखें</h1>
+      <a href="./">← एडमिन पैनल</a>
+    </header>
+
+    <main>
+      <section class="step">
+        <h2><span class="num">1</span>यह प्रॉम्प्ट कॉपी करें</h2>
+        <p>इसमें आपकी वेबसाइट की श्रेणियां (sections) पहले से लिखी हैं।</p>
+        <textarea id="prompt" readonly></textarea>
+        <div class="row">
+          <button type="button" class="primary" id="copy-prompt">प्रॉम्प्ट कॉपी करें</button>
+        </div>
+        <div class="status" id="copy-status" role="status"></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">2</span>ChatGPT या Gemini में पेस्ट करें</h2>
+        <p>प्रॉम्प्ट पेस्ट करें, उसके ठीक नीचे अपनी खबर की जानकारी / नोट्स / प्रेस विज्ञप्ति जोड़ें, और भेजें।</p>
+        <div class="row">
+          <a class="btn secondary" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT खोलें</a>
+          <a class="btn secondary" href="https://gemini.google.com/app" target="_blank" rel="noopener">Gemini खोलें</a>
+        </div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">3</span>AI का पूरा जवाब यहां पेस्ट करें</h2>
+        <p>AI जो भी लिखे, सब कॉपी करके यहां पेस्ट करें (Copy बटन से)।</p>
+        <textarea id="answer" placeholder='{"title": "...", "excerpt": "...", ...}'></textarea>
+        <div class="status" id="parse-status" role="status"></div>
+        <div class="fields" id="fields" hidden></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">4</span>एडमिन में खबर भरें</h2>
+        <p>नई खबर का पेज खुलेगा — शीर्षक, सारांश, श्रेणी, टैग और पूरी खबर अपने-आप भरी होगी।</p>
+        <button type="button" class="primary big" id="fill" disabled>एडमिन में खबर भरें →</button>
+        <p class="tip">उसके बाद बस मुख्य फोटो, YouTube / Facebook वीडियो जोड़ें, खबर एक बार पढ़ लें और <b>Save</b> दबाएं।<br />अगर कोई खाना खाली दिखे, तो ऊपर उस खाने के “कॉपी” बटन से कॉपी करके पेस्ट कर दें।</p>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      let categories = [];
+      let story = null;
+
+      // The site's sections, so the AI picks one that exists.
+      fetch('../app/v1/home.json', { cache: 'no-cache' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((home) => {
+          if (home?.categories) categories = home.categories;
+          $('prompt').value = buildPrompt(home?.site?.title);
+        })
+        .catch(() => ($('prompt').value = buildPrompt()));
+      $('prompt').value = buildPrompt();
+
+      function buildPrompt(site = 'हमारी न्यूज़ वेबसाइट') {
+        const list = categories.length
+          ? categories.map((c) => `${c.id} = ${c.name}${c.parent ? ` (${(categories.find((p) => p.id === c.parent) || {}).name || c.parent} के अंदर)` : ''}`).join('\n')
+          : 'desh = देश\nrajya = राज्य\nrajniti = राजनीति\ncrime = क्राइम\nkhel = खेल\nmanoranjan = मनोरंजन\nkarobar = कारोबार';
+        return `तुम एक अनुभवी हिंदी न्यूज़ एडिटर हो। नीचे दी गई जानकारी से "${site}" वेबसाइट के लिए एक पूरी, छपने लायक खबर लिखो।
+
+नियम:
+- भाषा: सरल, साफ़ और सही हिंदी (देवनागरी)।
+- सिर्फ़ वही तथ्य लिखो जो जानकारी में दिए हैं। कोई नाम, संख्या, तारीख, जगह या बयान अपनी तरफ़ से मत जोड़ो।
+- शीर्षक (title): 60–90 अक्षर, आकर्षक लेकिन सच्चा, क्लिकबेट नहीं।
+- सारांश (excerpt): 1–2 वाक्य, लगभग 150–200 अक्षर।
+- खबर (body): 250–500 शब्द, 4–7 छोटे पैराग्राफ। पहले पैराग्राफ में कौन, क्या, कब, कहां, क्यों। ज़रूरत हो तो 1–2 उप-शीर्षक "## " से शुरू करो।
+- श्रेणी (category): नीचे की सूची में से सिर्फ़ एक id चुनो:
+${list}
+- टैग (tags): 3–6 छोटे हिंदी टैग।
+
+जवाब सिर्फ़ इस JSON फ़ॉर्मेट में दो। JSON के अलावा कुछ भी मत लिखो:
+{"title": "...", "excerpt": "...", "category": "...", "tags": ["...", "..."], "body": "पहला पैराग्राफ...\\n\\nदूसरा पैराग्राफ..."}
+
+खबर की जानकारी:
+`;
+      }
+
+      async function copyText(text, statusEl, msg) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const t = document.createElement('textarea');
+          t.value = text;
+          document.body.append(t);
+          t.select();
+          document.execCommand('copy');
+          t.remove();
+        }
+        if (statusEl) {
+          statusEl.textContent = msg;
+          statusEl.className = 'status ok';
+        }
+      }
+
+      $('copy-prompt').addEventListener('click', () =>
+        copyText($('prompt').value, $('copy-status'), '✓ कॉपी हो गया — अब ChatGPT या Gemini में पेस्ट करें और नीचे अपनी खबर जोड़ें।'),
+      );
+
+      // AI answers sometimes add text around the JSON, use ```json fences, or put real line breaks inside text.
+      function readAnswer(text) {
+        let s = text.replace(/```(?:json)?/gi, '').replace(/[“”]/g, (q, i, all) => q);
+        const a = s.indexOf('{');
+        const b = s.lastIndexOf('}');
+        if (a < 0 || b <= a) throw new Error('no-json');
+        s = s.slice(a, b + 1);
+        let out = '';
+        let inText = false;
+        let escaped = false;
+        for (const ch of s) {
+          if (inText) {
+            if (escaped) escaped = false;
+            else if (ch === '\\') escaped = true;
+            else if (ch === '"') inText = false;
+            else if (ch === '\n') {
+              out += '\\n';
+              continue;
+            } else if (ch === '\r') continue;
+            else if (ch === '\t') {
+              out += '\\t';
+              continue;
+            }
+          } else if (ch === '"') inText = true;
+          out += ch;
+        }
+        return JSON.parse(out);
+      }
+
+      const clean = (v) => (typeof v === 'string' ? v.trim() : '');
+
+      function toStory(d) {
+        const body = Array.isArray(d.body) ? d.body.join('\n\n') : clean(d.body);
+        const tags = (Array.isArray(d.tags) ? d.tags : clean(d.tags).split(/[,،]/))
+          .map((t) => clean(String(t)).replace(/^#/, '').replace(/,/g, ' '))
+          .filter(Boolean)
+          .slice(0, 8);
+        let category = clean(d.category);
+        const known = categories.find((c) => c.id === category) || categories.find((c) => c.name === category);
+        const warnings = [];
+        if (categories.length && !known) {
+          if (category) warnings.push(`श्रेणी "${category}" आपकी वेबसाइट में नहीं है — एडमिन में श्रेणी खुद चुनें।`);
+          category = '';
+        } else if (known) category = known.id;
+        return { title: clean(d.title), excerpt: clean(d.excerpt), category, categoryName: known?.name ?? '', tags, body, warnings };
+      }
+
+      function showFields(s) {
+        const box = $('fields');
+        const rows = [
+          ['शीर्षक', s.title],
+          ['सारांश', s.excerpt],
+          ['श्रेणी', s.categoryName ? `${s.categoryName} (${s.category})` : ''],
+          ['टैग', s.tags.join(', ')],
+          ['खबर', s.body],
+        ];
+        box.replaceChildren(
+          ...rows.map(([label, value]) => {
+            const el = document.createElement('div');
+            el.className = 'field';
+            el.innerHTML = '<div class="field__head"><span></span><button type="button">कॉपी</button></div><div class="field__value"></div>';
+            el.querySelector('span').textContent = label;
+            el.querySelector('.field__value').textContent = value || '—';
+            el.querySelector('button').addEventListener('click', (e) => copyText(value || '', null).then(() => (e.target.textContent = '✓ कॉपी')));
+            return el;
+          }),
+        );
+        box.hidden = false;
+      }
+
+      $('answer').addEventListener('input', () => {
+        const text = $('answer').value.trim();
+        const status = $('parse-status');
+        story = null;
+        $('fill').disabled = true;
+        $('fields').hidden = true;
+        if (!text) return (status.textContent = '');
+        try {
+          const s = toStory(readAnswer(text));
+          if (!s.title || !s.body) throw new Error('empty');
+          story = s;
+          status.className = 'status ok';
+          status.innerHTML = '✓ खबर तैयार है — नीचे जांच लें।' + s.warnings.map((w) => `<br><span class="warn">⚠ ${w}</span>`).join('');
+          showFields(s);
+          $('fill').disabled = false;
+        } catch {
+          status.className = 'status bad';
+          status.textContent = 'जवाब पढ़ा नहीं जा सका। AI से कहें: "सिर्फ़ JSON फ़ॉर्मेट में जवाब दो" — फिर पूरा जवाब दोबारा पेस्ट करें।';
+        }
+      });
+
+      // Opens the admin's "new story" page with every field filled in (Sveltia CMS reads them from the address).
+      $('fill').addEventListener('click', () => {
+        if (!story) return;
+        const fields = { title: story.title, excerpt: story.excerpt, category: story.category, tags: story.tags.join(','), body: story.body };
+        const query = Object.entries(fields)
+          .filter(([, v]) => v)
+          .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+          .join('&');
+        location.href = `./#/collections/articles/new?${query}`;
+      });
+    </script>
+  </body>
+</html>

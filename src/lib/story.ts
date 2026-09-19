@@ -13,6 +13,8 @@ export interface StoryPageProps {
   author?: Author;
   cover?: ResolvedImage;
   videoId?: string;
+  /** Facebook video/reel shown as the lead media when there is no YouTube video. */
+  fbVideo?: string;
   pageUrl: string;
   /** CSS aspect-ratio for the cover photo. */
   ratio: string;

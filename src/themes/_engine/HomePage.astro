@@ -1,4 +1,5 @@
 ---
+import AdSlot from '../../components/AdSlot.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import WebStoryCard from '../../components/WebStoryCard.astro';
 import TrendingBar from '../../components/widgets/TrendingBar.astro';
@@ -131,6 +132,8 @@ const compactBlocks = config.sections === 'compact' ? blocks : blocks.slice(3);
               </div>
             </section>
           )}
+
+          <AdSlot place="home" />
 
           {featureBlocks.map((b) => (
             <CategoryBlock category={b.category} stories={b.stories} layout="feature" />

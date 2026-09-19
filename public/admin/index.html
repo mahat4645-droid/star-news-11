@@ -51,9 +51,24 @@
         content: 'रद्द करें';
         font-size: 14px;
       }
+      /* Shortcut to the "write a story with ChatGPT / Gemini" helper (ai.html). */
+      .ai-helper {
+        position: fixed;
+        z-index: 1000;
+        right: 16px;
+        bottom: 16px;
+        padding: 11px 18px;
+        border-radius: 999px;
+        background: #6d28d9;
+        color: #fff;
+        font: 700 14px/1 system-ui, sans-serif;
+        text-decoration: none;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      }
     </style>
   </head>
   <body>
+    <a class="ai-helper" href="ai.html">AI से खबर लिखें</a>
     <!-- Sveltia CMS: free, open-source, Git-based admin panel. Configuration lives in ./config.yml -->
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
     <script>
@@ -73,6 +88,24 @@
         toBlock: ({ id }) => `<div class="yt-embed" data-yt="${ytId(id)}"></div>`,
         toPreview: ({ id }) => `<img src="https://i.ytimg.com/vi/${ytId(id)}/hqdefault.jpg" alt="YouTube video" style="max-width:100%">`,
       });
+
+      // Facebook and Instagram videos/posts inside a story (shown on the site by src/scripts/site.ts).
+      const attr = (s = '') => s.trim().replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      const unattr = (s = '') => s.replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+      for (const [id, label, cls, hint] of [
+        ['facebook', 'Facebook वीडियो / पोस्ट', 'fb-embed', 'Facebook वीडियो, रील या पोस्ट का लिंक'],
+        ['instagram', 'Instagram पोस्ट / रील', 'ig-embed', 'Instagram पोस्ट या रील का लिंक'],
+      ]) {
+        window.CMS?.registerEditorComponent?.({
+          id,
+          label,
+          fields: [{ name: 'url', label: hint, widget: 'string' }],
+          pattern: new RegExp(`^<div class="${cls}" data-url="([^"]*)"></div>$`, 'm'),
+          fromBlock: (match) => ({ url: unattr(match[1]) }),
+          toBlock: ({ url }) => `<div class="${cls}" data-url="${attr(url)}"></div>`,
+          toPreview: ({ url }) => `<p><b>${label}:</b> ${attr(url)}</p>`,
+        });
+      }
 
       // Login screen: the token box becomes a password box (hidden characters, browsers can save it),
       // and on the live site it opens straight away. On localhost "Work with Local Repository" stays available.

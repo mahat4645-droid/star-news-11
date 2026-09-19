@@ -28,11 +28,14 @@ media_libraries:
           width: 2400
           height: 2400
 
-# Web addresses use Latin letters. Each story asks for its own short English URL (e.g. "up-flood-alert").
+# Web addresses are made from the Hindi title itself — nothing to type. "शहर में भारी बारिश" becomes
+# /news/शहर-में-भारी-बारिश/. encoding must stay "unicode" (ascii would throw every Hindi letter away) and
+# clean_accents must stay off (it strips nukta and halant marks, turning स्कूल into सकूल).
 slug:
-  encoding: ascii
-  clean_accents: true
+  encoding: unicode
+  clean_accents: false
   sanitize_replacement: '-'
+  maxlength: 60
 
 collections:
   # ─────────────────────────────────────────────────────────── Stories
@@ -43,7 +46,7 @@ collections:
     description: News articles, video stories and features.
     folder: src/content/articles
     path: '{{slug}}/index'
-    slug: '{{fields._slug}}'
+    slug: '{{title}}'
     media_folder: ''
     public_folder: ''
     create: true
@@ -92,11 +95,26 @@ collections:
         required: false
         hint: Describe the photo for readers using screen readers.
       - { label: कैप्शन / फोटो क्रेडिट (Caption), name: cover_caption, widget: string, required: false }
+      - label: और फोटो (More photos — 3 तक)
+        name: photos
+        widget: list
+        required: false
+        max: 3
+        summary: '{{fields.caption}}'
+        hint: मुख्य फोटो के अलावा 3 और फोटो जोड़ सकते हैं। ये खबर के नीचे एक लाइन में दिखेंगी।
+        fields:
+          - { label: फोटो (Photo), name: image, widget: image }
+          - { label: कैप्शन / फोटो क्रेडिट, name: caption, widget: string, required: false }
       - label: YouTube वीडियो
         name: youtube
         widget: string
         required: false
         hint: Paste any YouTube link. It becomes the lead video and the story appears in Videos.
+      - label: Facebook वीडियो / रील
+        name: facebook
+        widget: string
+        required: false
+        hint: Facebook वीडियो या रील का लिंक। YouTube खाली हो तो यही खबर के सबसे ऊपर चलेगा, और खबर वीडियो सेक्शन में भी दिखेगी।
       - { label: टैग (Tags), name: tags, widget: list, required: false }
       - label: फीचर्ड (Featured)
         name: featured
@@ -123,7 +141,7 @@ collections:
     description: Tap-through photo stories (AMP Web Stories, eligible for Google Discover).
     folder: src/content/webstories
     path: '{{slug}}/index'
-    slug: '{{fields._slug}}'
+    slug: '{{title}}'
     media_folder: ''
     public_folder: ''
     create: true
@@ -170,7 +188,7 @@ collections:
     extension: json
     format: json
     identifier_field: name
-    slug: '{{fields._slug}}'
+    slug: '{{name}}'
     summary: '{{name}}'
     sortable_fields: [order, name]
     fields:
@@ -204,7 +222,7 @@ collections:
     extension: json
     format: json
     identifier_field: name
-    slug: '{{fields._slug}}'
+    slug: '{{name}}'
     media_folder: /public/uploads/authors
     public_folder: /uploads/authors
     fields:
@@ -225,7 +243,7 @@ collections:
     delete: true
     extension: md
     format: frontmatter
-    slug: '{{fields._slug}}'
+    slug: '{{title}}'
     media_folder: /public/uploads/pages
     public_folder: /uploads/pages
     fields:
@@ -258,12 +276,48 @@ collections:
             required: false
             hint: Optional. Without a logo, the site name is shown as a styled text logo.
           - { label: ब्रांड रंग (Brand colour), name: brand_color, widget: color }
+          - label: सोशल मीडिया — Facebook, Instagram, YouTube (Social media links)
+            name: social
+            widget: object
+            hint: अपने पेज / चैनल का पूरा लिंक डालें। खाली छोड़ने पर वह आइकन नहीं दिखेगा।
+            fields:
+              - { label: Facebook पेज, name: facebook, widget: string, required: false, hint: 'e.g. https://www.facebook.com/yourpage' }
+              - { label: Instagram, name: instagram, widget: string, required: false, hint: 'e.g. https://www.instagram.com/yourname' }
+              - { label: YouTube चैनल, name: youtube, widget: string, required: false, hint: 'e.g. https://www.youtube.com/@yourchannel' }
+              - { label: X (Twitter), name: x, widget: string, required: false }
+              - { label: WhatsApp, name: whatsapp, widget: string, required: false, hint: 'e.g. https://wa.me/919000000000' }
+          - label: फॉलोअर्स / सब्सक्राइबर दिखाएं (Follower counts)
+            name: follow
+            widget: object
+            collapsed: true
+            hint: साइट पर "हमसे जुड़ें" डिब्बा — Facebook, Instagram और YouTube की गिनती के साथ। ऊपर सोशल मीडिया के लिंक भरे होने ज़रूरी हैं।
+            fields:
+              - { label: यह डिब्बा दिखाएं, name: show, widget: boolean, default: true }
+              - { label: Facebook फॉलोअर्स, name: facebook, widget: string, required: false, hint: 'जैसे: 12.5K या 12,500 — खुद भरें' }
+              - { label: Instagram फॉलोअर्स, name: instagram, widget: string, required: false, hint: 'जैसे: 8.2K' }
+              - { label: YouTube सब्सक्राइबर, name: youtube, widget: string, required: false, hint: 'नीचे चैनल और API key भरने पर यह अपने-आप आ जाता है' }
+              - { label: YouTube व्यूज़, name: youtube_views, widget: string, required: false, hint: 'नीचे चैनल और API key भरने पर यह अपने-आप आ जाता है' }
+              - label: YouTube चैनल (अपने-आप गिनती के लिए)
+                name: youtube_channel
+                widget: string
+                required: false
+                hint: चैनल का हैंडल (@yourchannel) या चैनल ID (UC से शुरू)। खाली छोड़ेंगे तो ऊपर वाले नंबर ही दिखेंगे।
+              - label: YouTube API key
+                name: youtube_api_key
+                widget: string
+                required: false
+                hint: Google Cloud से मुफ़्त "YouTube Data API v3" key। यह key साइट के कोड में दिखती है, इसलिए Google में इसे अपनी वेबसाइट तक सीमित (HTTP referrer) ज़रूर करें।
           - label: साइट का पता (Site URL)
             name: site_url
             widget: string
             hint: Your live address, e.g. https://anantanewz.pages.dev — used for sharing links, RSS and the sitemap.
           - { label: Date format (locale), name: locale, widget: string, default: hi-IN, hint: 'e.g. hi-IN, en-IN, en-US' }
           - { label: Time zone, name: timezone, widget: string, default: Asia/Kolkata }
+          - label: खबर कॉपी होने से रोकें (Copy protection)
+            name: protect_content
+            widget: boolean
+            default: false
+            hint: चालू करने पर साइट से टेक्स्ट और फोटो कॉपी नहीं होंगे, और राइट-क्लिक बंद रहेगा। पूरी तरह रोकना मुमकिन नहीं — स्क्रीनशॉट फिर भी लिए जा सकते हैं।
           - { label: ब्रेकिंग टिकर दिखाएं (Show breaking ticker), name: show_ticker, widget: boolean, default: true }
           - { label: टिकर लेबल (Ticker label), name: ticker_label, widget: string, default: ब्रेकिंग }
           - { label: WhatsApp चैनल लिंक, name: whatsapp_channel, widget: string, required: false }
@@ -276,15 +330,6 @@ collections:
               - { label: Google Play URL, name: play_store, widget: string, required: false }
               - { label: App Store URL, name: app_store, widget: string, required: false }
               - { label: Android ऐप फ़ाइल (APK link), name: android_apk, widget: string, required: false, hint: 'Direct download, e.g. /download/app.apk — npm run new-client fills this in.' }
-          - label: सोशल लिंक (Social links)
-            name: social
-            widget: object
-            fields:
-              - { label: X (Twitter), name: x, widget: string, required: false }
-              - { label: Facebook, name: facebook, widget: string, required: false }
-              - { label: Instagram, name: instagram, widget: string, required: false }
-              - { label: YouTube, name: youtube, widget: string, required: false }
-              - { label: WhatsApp, name: whatsapp, widget: string, required: false }
           - label: आज का सुविचार (Thoughts of the day)
             name: quotes
             widget: list
@@ -299,3 +344,29 @@ collections:
               - { label: प्राप्तकर्ता नाम (Payee name), name: payee_name, widget: string, required: false }
               - { label: संदेश (Message), name: note, widget: text, required: false }
           - { label: फुटर नोट (Footer note), name: footer_note, widget: text, required: false }
+      - name: ads
+        label: विज्ञापन (Ads)
+        file: src/data/ads.json
+        fields:
+          - label: विज्ञापन (Ads)
+            name: ads
+            widget: list
+            required: false
+            summary: '{{fields.name}} · {{fields.placement}}'
+            hint: किसी भी आकार की फोटो डालें — बैनर, चौकोर या लंबी। एक ही जगह पर कई विज्ञापन एक के नीचे एक दिखेंगे।
+            fields:
+              - { label: नाम (सिर्फ़ आपके लिए), name: name, widget: string, hint: 'e.g. शर्मा ज्वेलर्स — दिवाली' }
+              - { label: चालू है (Active), name: active, widget: boolean, default: true, hint: 'बंद करने पर विज्ञापन छिप जाएगा, हटेगा नहीं।' }
+              - label: कहां दिखे (Placement)
+                name: placement
+                widget: select
+                default: top
+                options:
+                  - { label: 'सबसे ऊपर — हर पेज पर हेडर के नीचे', value: top }
+                  - { label: 'होम पेज — खबरों के बीच', value: home }
+                  - { label: 'हर खबर के अंदर — फोटो के नीचे', value: story }
+                  - { label: 'साइडबार — कंप्यूटर पर दाईं ओर, मोबाइल पर नीचे', value: sidebar }
+                  - { label: 'सबसे नीचे — फुटर के ऊपर', value: bottom }
+              - { label: विज्ञापन की फोटो (Ad image), name: image, widget: image, required: false, hint: 'कोई भी आकार। चौड़ाई अपने-आप फिट हो जाती है।' }
+              - { label: क्लिक करने पर कहां जाए (Link), name: link, widget: string, required: false, hint: 'e.g. https://wa.me/919000000000 या दुकान की वेबसाइट। खाली छोड़ सकते हैं।' }
+              - { label: विज्ञापन कोड — Google AdSense आदि (Ad code), name: code, widget: text, required: false, hint: 'फोटो की जगह किसी विज्ञापन कंपनी का HTML कोड। ज़्यादातर लोग इसे खाली छोड़ें।' }

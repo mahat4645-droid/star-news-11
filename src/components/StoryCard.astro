@@ -8,6 +8,7 @@ import {
   formatShortDate,
   getAuthor,
   getCategory,
+  hasVideo,
   youtubeId,
   type Article,
   type ResolvedImage,
@@ -52,6 +53,7 @@ const url = articleUrl(article);
 const category = await getCategory(data.category);
 const author = showAuthor ? await getAuthor(data.author) : undefined;
 const videoId = youtubeId(data.youtube);
+const isVideo = hasVideo(data);
 // Video stories without a cover use the YouTube thumbnail. Both of these are 16:9 (no letterbox bars):
 // small rows get the light 320px version, larger cards the max-res one (with a fallback in site.ts).
 const small = variant === 'row' || variant === 'mini';
@@ -62,12 +64,12 @@ const cover: ResolvedImage | undefined =
   (videoId ? { kind: 'url', src: `https://i.ytimg.com/vi/${videoId}/${small ? 'mqdefault' : 'maxresdefault'}.jpg` } : undefined);
 ---
 
-<article class:list={['card', `card--${variant}`, { 'has-video': !!videoId }]} style={`--cat:${category.color}`}>
+<article class:list={['card', `card--${variant}`, { 'has-video': isVideo }]} style={`--cat:${category.color}`}>
   {
     image && (
       <div class="card__media">
         <CoverImage image={cover} alt="" sizes={sizes} ratio={ratio} eager={eager} label={category.name} ytThumb={ytThumb} />
-        {videoId && (
+        {isVideo && (
           <span class="play-badge">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 5v14l11-7z" />

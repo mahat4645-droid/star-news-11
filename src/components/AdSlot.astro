@@ -1,0 +1,43 @@
+---
+// Ads added in the admin panel (Settings → विज्ञापन), shown in fixed places on every theme.
+// Any image size works: it is centred and never wider than its column. An ad can also be HTML code
+// from an ad network (e.g. Google AdSense) instead of an image.
+import { t } from '../lib/i18n';
+import { asset } from '../lib/url';
+
+type Place = 'top' | 'home' | 'story' | 'sidebar' | 'bottom';
+type Ad = { name?: string; active?: boolean; placement?: string; image?: string; link?: string; code?: string };
+
+interface Props {
+  place: Place;
+  class?: string;
+}
+
+const { place, class: className } = Astro.props;
+
+// Older client sites may not have the ads file yet; then there are simply no ads.
+const files = import.meta.glob<{ ads?: Ad[] }>('../data/ads.json', { eager: true, import: 'default' });
+const all = Object.values(files)[0]?.ads ?? [];
+const ads = all.filter((ad) => ad && ad.active !== false && ad.placement === place && (ad.image || ad.code?.trim()));
+---
+
+{
+  ads.length > 0 && (
+    <aside class:list={['ad-slot', `ad-slot--${place}`, className]} aria-label={t('advertisement')} data-pagefind-ignore>
+      {ads.map((ad) => (
+        <div class="ad">
+          <span class="ad__label">{t('advertisement')}</span>
+          {ad.code?.trim() ? (
+            <div class="ad__code" set:html={ad.code} />
+          ) : ad.link ? (
+            <a href={ad.link} target="_blank" rel="sponsored noopener">
+              <img src={asset(ad.image!)} alt={ad.name ?? t('advertisement')} loading={place === 'top' ? 'eager' : 'lazy'} decoding="async" />
+            </a>
+          ) : (
+            <img src={asset(ad.image!)} alt={ad.name ?? t('advertisement')} loading={place === 'top' ? 'eager' : 'lazy'} decoding="async" />
+          )}
+        </div>
+      ))}
+    </aside>
+  )
+}

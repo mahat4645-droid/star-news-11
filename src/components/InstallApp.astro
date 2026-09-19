@@ -1,0 +1,26 @@
+---
+// "Install the app" bar. Android and desktop Chrome/Edge get the browser's real install prompt;
+// iPhone/iPad (no install button in Safari) get the "Share → Add to Home Screen" steps.
+// Shown by src/scripts/site.ts; hidden once installed or dismissed (for a week).
+import { settings } from '../lib/content';
+import { t } from '../lib/i18n';
+import { url } from '../lib/url';
+---
+
+<div class="install" data-install-bar hidden role="region" aria-label={t('installApp')}>
+  <img class="install__icon" src={url('icons/icon-192.png')} alt="" width="44" height="44" />
+  <p class="install__text">
+    <b>{t('installTitle', { site: settings.site_title })}</b>
+    <span data-for="prompt">{t('installText')}</span>
+    <span data-for="ios">
+      {t('installIos1')}
+      <svg class="install__share" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"></path></svg>
+      {t('installIos2')}
+    </span>
+    <span data-for="help">{t('installHelp')}</span>
+  </p>
+  <button type="button" class="install__go" data-install-go>{t('installApp')}</button>
+  <button type="button" class="install__close" data-install-close aria-label={t('close')}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+  </button>
+</div>

@@ -5,13 +5,17 @@ import agency from '../data/agency.json';
 import Icon from './Icon.astro';
 import { lang } from '../lib/i18n';
 
+// "show": false in src/data/agency.json hides the credit (white-label sites).
+const show = (agency as { show?: boolean }).show !== false;
 const text = agency.text[lang as keyof typeof agency.text] ?? agency.text.hi;
 const href = `https://wa.me/${agency.whatsapp}?text=${encodeURIComponent(agency.message)}`;
 ---
 
+{show && (
 <div class="agency-credit">
   <a href={href} target="_blank" rel="noopener">
     <Icon name="whatsapp" size={15} />
     <span>{text}: <b>{agency.phone}</b></span>
   </a>
 </div>
+)}

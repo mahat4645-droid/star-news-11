@@ -1,7 +1,9 @@
 ---
+import AdSlot from '../../components/AdSlot.astro';
 import AgencyCredit from '../../components/AgencyCredit.astro';
 import DemoBar from '../../components/DemoBar.astro';
 import Head from '../../components/Head.astro';
+import InstallApp from '../../components/InstallApp.astro';
 import Ticker from '../../components/Ticker.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
@@ -36,6 +38,7 @@ function brandVars(hex?: string): string | undefined {
   data-locale={settings.locale}
   data-tz={settings.timezone}
   style={brandVars(brandColor)}
+  data-protect={(settings as { protect_content?: boolean }).protect_content ? '' : undefined}
   data-theme={config.mode === 'dark' ? 'dark' : undefined}
   data-topbar={config.topbar}
   data-header={config.header}
@@ -57,13 +60,16 @@ function brandVars(hex?: string): string | undefined {
     <DemoBar />
     <Header active={activeNav} />
     <Ticker />
+    <AdSlot place="top" class="container" />
     <main id="main">
       <slot />
     </main>
+    <AdSlot place="bottom" class="container" />
     <Footer />
     <AgencyCredit />
     <TabBar active={activeNav} />
     <Drawer />
+    <InstallApp />
     <script>
       import '../../scripts/site.ts';
     </script>

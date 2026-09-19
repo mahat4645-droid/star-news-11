@@ -80,6 +80,10 @@ const telegram = (settings as { telegram_channel?: string }).telegram_channel;
     </ul>
 
     <div class="sm-drawer__foot">
+      <button type="button" class="sm-install" data-install-trigger hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"></path></svg>
+        {t('installApp')}
+      </button>
       <SocialIcons class="sm-social" />
       <button type="button" class="btn btn--ghost" data-theme-toggle>
         <Icon name="moon" size={16} class="icon-moon" />

@@ -1,5 +1,7 @@
 ---
+import AdSlot from '../../components/AdSlot.astro';
 import Avatar from '../../components/Avatar.astro';
+import StoryPhotos from '../../components/StoryPhotos.astro';
 import CoverImage from '../../components/CoverImage.astro';
 import ShareBar from '../../components/ShareBar.astro';
 import StoryCard from '../../components/StoryCard.astro';
@@ -12,7 +14,7 @@ import { url } from '../../lib/url';
 import type { StoryPageProps } from '../../lib/story';
 
 type Props = StoryPageProps;
-const { article, Content, category, parentCategory, author, cover, videoId, pageUrl, ratio, related, shareImage, minutes } = Astro.props;
+const { article, Content, category, parentCategory, author, cover, videoId, fbVideo, pageUrl, ratio, related, shareImage, minutes } = Astro.props;
 const { data } = article;
 ---
 
@@ -67,6 +69,11 @@ const { data } = article;
             <YouTube id={videoId} title={data.title} poster={cover} eager sizes="(min-width: 1000px) 820px, 100vw" />
             {data.cover_caption && <figcaption>{data.cover_caption}</figcaption>}
           </figure>
+        ) : fbVideo ? (
+          <figure class="sm-story__media">
+            <div class="fb-embed" data-url={fbVideo} />
+            {data.cover_caption && <figcaption>{data.cover_caption}</figcaption>}
+          </figure>
         ) : (
           cover && (
             <figure class="sm-story__media">
@@ -84,9 +91,13 @@ const { data } = article;
         )
       }
 
+      <AdSlot place="story" />
+
       <div class="prose">
         <Content />
       </div>
+
+      <StoryPhotos article={article} />
     </div>
 
     <footer class="sm-story__foot">
