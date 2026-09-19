@@ -1,3 +1,12 @@
 {
-  "ads": []
+  "ads": [
+    {
+      "name": "स्टार न्यूज़ 11 न्यूज़ नेटवर्क ग्रुप",
+      "active": true,
+      "placement": "story",
+      "image": "/uploads/539127.webp",
+      "link": "",
+      "code": ""
+    }
+  ]
 }
