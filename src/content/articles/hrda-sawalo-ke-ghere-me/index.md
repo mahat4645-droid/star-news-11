@@ -4,7 +4,7 @@ excerpt: पुहाना में HRDA की निगरानी पर �
 category: uttarakhand-haridwar
 author: ''
 date: 2026-09-19T06:10:00Z
-cover: ''
+cover: 537535.webp
 cover_alt: ''
 cover_caption: ''
 youtube: ''
