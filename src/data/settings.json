@@ -6,9 +6,26 @@
   "description": "STAR NEWS 11 — रुड़की, हरिद्वार और उत्तराखंड की ताज़ा खबरें। साथ सच का।",
   "logo": "/uploads/logo.png",
   "brand_color": "#000159",
+  "social": {
+    "facebook": "",
+    "instagram": "",
+    "youtube": "",
+    "x": "",
+    "whatsapp": ""
+  },
+  "follow": {
+    "show": true,
+    "facebook": "",
+    "instagram": "",
+    "youtube": "",
+    "youtube_views": "",
+    "youtube_channel": "",
+    "youtube_api_key": ""
+  },
   "site_url": "https://star-news-11.pages.dev",
   "locale": "hi-IN",
   "timezone": "Asia/Kolkata",
+  "protect_content": true,
   "show_ticker": true,
   "ticker_label": "ब्रेकिंग",
   "whatsapp_channel": "",
@@ -18,13 +35,6 @@
     "play_store": "",
     "app_store": "",
     "android_apk": ""
-  },
-  "social": {
-    "x": "",
-    "facebook": "",
-    "instagram": "",
-    "youtube": "",
-    "whatsapp": ""
   },
   "quotes": [
     "“सपने वो नहीं जो हम सोते वक्त देखते हैं, सपने वो हैं जो हमें सोने नहीं देते।”",
