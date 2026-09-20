@@ -10,7 +10,7 @@ cover_caption: ''
 photos:
   - image: 545813.webp
     caption: ''
-youtube: https://www.facebook.com/share/v/1HnVeeHxm6/
+youtube: https://youtu.be/9JxFUbdqPdU?si=JO9vSQV_zKZXanBE
 facebook: https://www.facebook.com/share/v/1HnVeeHxm6/
 tags:
   - EX CM Harish Rawat
