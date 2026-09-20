@@ -7,7 +7,9 @@ date: 2026-09-20T15:25:00Z
 cover: 545813.webp
 cover_alt: ''
 cover_caption: ''
-photos: []
+photos:
+  - image: 545813.webp
+    caption: ''
 youtube: ''
 facebook: ''
 tags:
