@@ -11,7 +11,7 @@ photos:
   - image: 545813.webp
     caption: ''
 youtube: ''
-facebook: ''
+facebook: https://www.facebook.com/share/v/1HnVeeHxm6/
 tags:
   - EX CM Harish Rawat
 featured: true
