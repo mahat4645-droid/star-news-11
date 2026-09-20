@@ -11,4 +11,4 @@ description: खबर, सुझाव या विज्ञापन के �
 - **प्रमुख/संस्थापक:** आरिफ खान
 - **संपादक:** आसिफ खान (प्रधान संपादक)
 
-<div class="yt-embed" data-yt="lIccgY6-5YQ"></div>
+<div class="yt-embed" data-yt="https://www.facebook.com/share/v/1HnVeeHxm6/"></div>
