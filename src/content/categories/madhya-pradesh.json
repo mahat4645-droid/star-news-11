@@ -1,1 +1,7 @@
-{ "name": "मध्य प्रदेश", "color": "#ea580c", "order": 5, "parent": "rajya" }
+{
+  "name": "रूडकी आस पास",
+  "description": "",
+  "color": "#ea580c",
+  "order": 5,
+  "parent": "rajya"
+}
