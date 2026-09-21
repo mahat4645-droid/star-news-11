@@ -4,7 +4,7 @@ excerpt: ‘जन-जन की सरकार, जन-जन के द्व
 category: bihar
 author: ''
 date: 2026-09-21T15:09:00Z
-cover: ''
+cover: 551483.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
