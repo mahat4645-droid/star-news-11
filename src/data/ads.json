@@ -4,7 +4,7 @@
       "name": "स्टार न्यूज़ 11 न्यूज़ नेटवर्क ग्रुप",
       "active": true,
       "placement": "story",
-      "order": 5,
+      "order": null,
       "image": "/uploads/539127.webp",
       "link": "",
       "code": ""
@@ -13,7 +13,7 @@
       "name": "सचिन गुप्ता पूजा गुप्ता",
       "active": true,
       "placement": "home",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540693.webp",
       "link": "",
       "code": ""
@@ -22,7 +22,7 @@
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "home",
-      "order": null,
+      "order": 5,
       "image": "/uploads/542211.webp",
       "link": "",
       "code": ""
@@ -31,7 +31,7 @@
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "sidebar",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540770.webp",
       "link": "",
       "code": ""
@@ -40,7 +40,7 @@
       "name": "सचिन गुप्ता पूजा गुप्ता",
       "active": true,
       "placement": "top",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540765.webp",
       "link": "",
       "code": ""
@@ -49,7 +49,7 @@
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "bottom",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540765.webp",
       "link": "",
       "code": ""
@@ -58,7 +58,7 @@
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "top",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540771.webp",
       "link": "",
       "code": ""
@@ -67,7 +67,7 @@
       "name": "दानिश गौड़",
       "active": true,
       "placement": "sidebar",
-      "order": null,
+      "order": 5,
       "image": "/uploads/540730.webp",
       "link": "",
       "code": ""
