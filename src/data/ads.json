@@ -13,7 +13,7 @@
       "name": "सचिन गुप्ता पूजा गुप्ता",
       "active": true,
       "placement": "home",
-      "order": 5,
+      "order": null,
       "image": "/uploads/540693.webp",
       "link": "",
       "code": ""
@@ -40,7 +40,7 @@
       "name": "सचिन गुप्ता पूजा गुप्ता",
       "active": true,
       "placement": "top",
-      "order": 5,
+      "order": 1,
       "image": "/uploads/540765.webp",
       "link": "",
       "code": ""
@@ -58,7 +58,7 @@
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "top",
-      "order": 5,
+      "order": 2,
       "image": "/uploads/540771.webp",
       "link": "",
       "code": ""
