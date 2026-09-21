@@ -13,7 +13,8 @@ cover_caption: ''
 photos: []
 youtube: ''
 facebook: ''
-tags: []
+tags:
+  - ऑपरेशन ट्रांसफर
 featured: true
 breaking: true
 draft: false
