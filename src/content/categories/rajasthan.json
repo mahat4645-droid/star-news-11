@@ -1,1 +1,7 @@
-{ "name": "राजस्थान", "color": "#ea580c", "order": 4, "parent": "rajya" }
+{
+  "name": "आस्था धार्मिक",
+  "description": "",
+  "color": "#ea580c",
+  "order": 4,
+  "parent": "rajya"
+}
