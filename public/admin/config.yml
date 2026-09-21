@@ -28,14 +28,15 @@ media_libraries:
           width: 2400
           height: 2400
 
-# Web addresses are made from the Hindi title itself — nothing to type. "शहर में भारी बारिश" becomes
-# /news/शहर-में-भारी-बारिश/. encoding must stay "unicode" (ascii would throw every Hindi letter away) and
-# clean_accents must stay off (it strips nukta and halant marks, turning स्कूल into सकूल).
+# Web addresses for stories are the date and time: /news/20260919-1632/. Nothing to type, and the link
+# stays short when it is shared on WhatsApp. (A Hindi address was tried first, but a shared link turned
+# into 300 characters of %E0%A4… — see HANDOFF.md.) `timezone: local` keeps it on India time instead of
+# UTC; Sveltia adds "-1" by itself if two stories land in the same minute.
 slug:
-  encoding: unicode
+  encoding: ascii
   clean_accents: false
   sanitize_replacement: '-'
-  maxlength: 60
+  timezone: local
 
 collections:
   # ─────────────────────────────────────────────────────────── Stories
@@ -46,14 +47,15 @@ collections:
     description: News articles, video stories and features.
     folder: src/content/articles
     path: '{{slug}}/index'
-    slug: '{{title}}'
+    slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}'
     media_folder: ''
     public_folder: ''
     create: true
     delete: true
     extension: md
     format: frontmatter
-    summary: '{{title}}'
+    # Sveltia's ternary needs single quotes inside, so this line is double-quoted YAML.
+    summary: "{{draft | ternary('🔴 ड्राफ्ट — ', '')}}{{title}}"
     sortable_fields:
       fields: [date, title, category]
       default:
@@ -141,13 +143,14 @@ collections:
     description: Tap-through photo stories (AMP Web Stories, eligible for Google Discover).
     folder: src/content/webstories
     path: '{{slug}}/index'
-    slug: '{{title}}'
+    slug: '{{year}}{{month}}{{day}}-{{hour}}{{minute}}'
     media_folder: ''
     public_folder: ''
     create: true
     delete: true
     extension: md
     format: frontmatter
+    summary: "{{draft | ternary('🔴 ड्राफ्ट — ', '')}}{{title}}"
     sortable_fields:
       fields: [date, title]
       default:
@@ -188,7 +191,7 @@ collections:
     extension: json
     format: json
     identifier_field: name
-    slug: '{{name}}'
+    slug: '{{fields._slug}}'
     summary: '{{name}}'
     sortable_fields: [order, name]
     fields:
@@ -222,7 +225,7 @@ collections:
     extension: json
     format: json
     identifier_field: name
-    slug: '{{name}}'
+    slug: '{{fields._slug}}'
     media_folder: /public/uploads/authors
     public_folder: /uploads/authors
     fields:
@@ -243,7 +246,7 @@ collections:
     delete: true
     extension: md
     format: frontmatter
-    slug: '{{title}}'
+    slug: '{{fields._slug}}'
     media_folder: /public/uploads/pages
     public_folder: /uploads/pages
     fields:
@@ -367,6 +370,13 @@ collections:
                   - { label: 'हर खबर के अंदर — फोटो के नीचे', value: story }
                   - { label: 'साइडबार — कंप्यूटर पर दाईं ओर, मोबाइल पर नीचे', value: sidebar }
                   - { label: 'सबसे नीचे — फुटर के ऊपर', value: bottom }
+              - label: क्रम (Order)
+                name: order
+                widget: number
+                required: false
+                value_type: int
+                min: 1
+                hint: एक ही जगह पर कई विज्ञापन हों तो कौन पहले दिखे — 1 सबसे ऊपर, फिर 2, 3। खाली छोड़ेंगे तो सबसे नीचे।
               - { label: विज्ञापन की फोटो (Ad image), name: image, widget: image, required: false, hint: 'कोई भी आकार। चौड़ाई अपने-आप फिट हो जाती है।' }
               - { label: क्लिक करने पर कहां जाए (Link), name: link, widget: string, required: false, hint: 'e.g. https://wa.me/919000000000 या दुकान की वेबसाइट। खाली छोड़ सकते हैं।' }
               - { label: विज्ञापन कोड — Google AdSense आदि (Ad code), name: code, widget: text, required: false, hint: 'फोटो की जगह किसी विज्ञापन कंपनी का HTML कोड। ज़्यादातर लोग इसे खाली छोड़ें।' }
