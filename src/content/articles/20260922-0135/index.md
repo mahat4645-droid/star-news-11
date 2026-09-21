@@ -10,7 +10,8 @@ cover_caption: ''
 photos: []
 youtube: ''
 facebook: ''
-tags: []
+tags:
+  - 2027 के रण से पहले कांग्रेस में तेज हुई हलचल
 featured: true
 breaking: true
 draft: false
