@@ -30,7 +30,7 @@
   "ticker_label": "ब्रेकिंग",
   "whatsapp_channel": "https://chat.whatsapp.com/IJszgoZ6onV3MkrZipcqVB?s=cl&p=a&mlu=4&ilr=4",
   "telegram_channel": "",
-  "auto_delete_days": 10,
+  "auto_delete_days": 15,
   "app": {
     "play_store": "",
     "app_store": "",
