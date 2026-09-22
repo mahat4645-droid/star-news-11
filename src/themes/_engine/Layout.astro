@@ -4,6 +4,7 @@ import AgencyCredit from '../../components/AgencyCredit.astro';
 import DemoBar from '../../components/DemoBar.astro';
 import Head from '../../components/Head.astro';
 import InstallApp from '../../components/InstallApp.astro';
+import SubscribePopup from '../../components/SubscribePopup.astro';
 import Ticker from '../../components/Ticker.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
@@ -70,6 +71,7 @@ function brandVars(hex?: string): string | undefined {
     <TabBar active={activeNav} />
     <Drawer />
     <InstallApp />
+    <SubscribePopup />
     <script>
       import '../../scripts/site.ts';
     </script>

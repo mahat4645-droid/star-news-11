@@ -1233,3 +1233,117 @@ figcaption {
 [data-protect] :is(a, button) :is(img, picture) {
   pointer-events: auto;
 }
+
+/* A Facebook share link that could not be embedded: a button to Facebook instead. */
+.fb-embed--link {
+  display: flex;
+  justify-content: center;
+  padding: 14px 0;
+}
+.fb-embed__link {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #1877f2;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Ads set to "स्लाइड शो": one at a time, fading into each other. */
+.ad-slot--slide {
+  position: relative;
+  display: grid;
+}
+.ad-slot--slide .ad {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+.ad-slot--slide .ad.is-on {
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ad-slot--slide .ad { transition: none; }
+}
+
+/* Subscribe popup (components/SubscribePopup.astro). */
+.subpop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(10, 10, 12, 0.55);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.subpop.is-on { opacity: 1; }
+.subpop[hidden] { display: none; }
+.subpop__box {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 26px 22px 18px;
+  border-radius: 18px;
+  background: var(--surface, #fff);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  transform: translateY(14px);
+  transition: transform 0.3s ease;
+}
+.subpop.is-on .subpop__box { transform: none; }
+.subpop__x {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: 0;
+  background: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 8px;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.subpop__title {
+  margin: 0 0 6px;
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+.subpop__text {
+  margin: 0 0 16px;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.subpop__list {
+  display: grid;
+  gap: 10px;
+}
+.subpop__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.subpop__btn--youtube { background: #ff0000; }
+.subpop__btn--facebook { background: #1877f2; }
+.subpop__btn--instagram { background: linear-gradient(45deg, #f09433, #dc2743 45%, #bc1888); }
+.subpop__later {
+  margin-top: 12px;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .subpop, .subpop__box { transition: none; }
+}

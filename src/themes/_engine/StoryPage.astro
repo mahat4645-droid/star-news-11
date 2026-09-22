@@ -71,7 +71,7 @@ const { data } = article;
           </figure>
         ) : fbVideo ? (
           <figure class="sm-story__media">
-            <div class="fb-embed" data-url={fbVideo} />
+            <div class="fb-embed" data-url={fbVideo} data-label={t('watchOnFacebook')} />
             {data.cover_caption && <figcaption>{data.cover_caption}</figcaption>}
           </figure>
         ) : (
@@ -98,6 +98,8 @@ const { data } = article;
       </div>
 
       <StoryPhotos article={article} />
+
+      <AdSlot place="after-story" />
     </div>
 
     <footer class="sm-story__foot">

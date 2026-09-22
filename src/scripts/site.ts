@@ -315,6 +315,19 @@ document.querySelectorAll<HTMLElement>('.fb-embed[data-url]').forEach((el) => {
     return el.remove();
   }
   if (!/(^|\.)(facebook\.com|fb\.watch)$/.test(link.hostname)) return el.remove();
+  // Share links (facebook.com/share/…) cannot be embedded, and only the build can resolve them
+  // (Facebook sends no CORS headers). Inside a story body, show a button to Facebook instead.
+  if (link.pathname.startsWith('/share/')) {
+    const a = document.createElement('a');
+    a.href = link.href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'fb-embed__link';
+    a.textContent = el.dataset.label ?? 'Facebook पर वीडियो देखें';
+    el.classList.add('fb-embed--link');
+    el.replaceChildren(a);
+    return;
+  }
   const video = link.hostname.endsWith('fb.watch') || link.searchParams.has('v') || /\/(videos?|watch|reel|share\/v|share\/r)(\/|$)/.test(link.pathname);
   el.classList.add(video ? 'fb-embed--video' : 'fb-embed--post');
   el.replaceChildren(
@@ -452,4 +465,65 @@ if (followCard) {
       })
       .catch(() => {}); // a wrong key or no network: the typed numbers stay on screen
   }
+}
+
+/* ------------------------------------------------------------ ad slide show */
+// A place whose ads are marked "स्लाइड शो" (Settings → विज्ञापन) shows one ad at a time and
+// changes every 5 seconds. Without JavaScript they simply stay stacked, as before.
+document.querySelectorAll<HTMLElement>('.ad-slot[data-slide]').forEach((slot) => {
+  const slides = [...slot.querySelectorAll<HTMLElement>('.ad')];
+  if (slides.length < 2) return;
+  let current = 0;
+  slides.forEach((ad, i) => ad.classList.toggle('is-on', i === 0));
+  const tick = () => {
+    slides[current].classList.remove('is-on');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('is-on');
+  };
+  let timer = setInterval(tick, 5000);
+  // Pause while the reader is looking at something else, or hovering over the ad.
+  slot.addEventListener('mouseenter', () => clearInterval(timer));
+  slot.addEventListener('mouseleave', () => (timer = setInterval(tick, 5000)));
+  document.addEventListener('visibilitychange', () => {
+    clearInterval(timer);
+    if (!document.hidden) timer = setInterval(tick, 5000);
+  });
+});
+
+/* ------------------------------------------------------- subscribe popup */
+// Settings → फॉलो करने का पॉपअप. Shown once after a few seconds; closing it (or tapping a channel)
+// keeps it away for the number of days set in the admin. Nothing is stored anywhere but the browser.
+const popup = document.querySelector<HTMLElement>('[data-subscribe-popup]');
+if (popup) {
+  const KEY = 'subscribe-popup-until';
+  const days = Number(popup.dataset.days ?? 7);
+  const delay = Number(popup.dataset.delay ?? 6);
+  let snoozed = false;
+  try {
+    snoozed = Number(localStorage.getItem(KEY) ?? 0) > Date.now();
+  } catch {}
+
+  const close = () => {
+    popup.classList.remove('is-on');
+    setTimeout(() => (popup.hidden = true), 300);
+    try {
+      localStorage.setItem(KEY, String(Date.now() + days * 86_400_000));
+    } catch {}
+  };
+
+  if (!snoozed) {
+    setTimeout(() => {
+      popup.hidden = false;
+      requestAnimationFrame(() => popup.classList.add('is-on'));
+    }, Math.max(0, delay) * 1000);
+  }
+
+  popup.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target.closest('[data-subscribe-close]') || target === popup) close();
+    else if (target.closest('[data-subscribe-go]')) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !popup.hidden) close();
+  });
 }

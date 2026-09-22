@@ -1,12 +1,13 @@
 ---
 import StoryCard from '../../components/StoryCard.astro';
 import YouTube from '../../components/YouTube.astro';
-import { articleUrl, categoryUrl, coverOf, excerptOf, getArticles, getCategory, hasVideo, youtubeId } from '../../lib/content';
+import { articleUrl, categoryUrl, coverOf, excerptOf, getArticles, getCategory, hasVideo, resolveFacebookUrl, youtubeId } from '../../lib/content';
 import { t } from '../../lib/i18n';
 
 // Any story with a YouTube or Facebook video link appears here automatically.
 const videos = (await getArticles()).filter((a) => hasVideo(a.data));
 const [feature, ...rest] = videos;
+const fbFeature = feature ? await resolveFacebookUrl(feature.data.facebook) : undefined;
 const featureCategory = feature && (await getCategory(feature.data.category));
 ---
 
@@ -23,7 +24,7 @@ const featureCategory = feature && (await getCategory(feature.data.category));
           {youtubeId(feature.data.youtube) ? (
             <YouTube id={youtubeId(feature.data.youtube)!} title={feature.data.title} poster={coverOf(feature)} eager />
           ) : (
-            <div class="fb-embed" data-url={feature.data.facebook} />
+            <div class="fb-embed" data-url={fbFeature} />
           )}
           <div class="sm-videos__caption">
             <a class="kicker" href={categoryUrl(featureCategory.id)}>{featureCategory.name}</a>

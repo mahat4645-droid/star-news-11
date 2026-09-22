@@ -1,0 +1,64 @@
+---
+// A one-time popup asking readers to follow the site's YouTube, Facebook and Instagram.
+// Switched on in Settings → फॉलो करने का पॉपअप; the links are the ones in Settings → सोशल मीडिया.
+// It waits a few seconds, and once the reader closes it (or taps a channel) it stays away for the
+// number of days set in the admin (src/scripts/site.ts remembers that in the browser).
+import Icon from './Icon.astro';
+import { settings } from '../lib/content';
+import { t } from '../lib/i18n';
+
+type Popup = { show?: boolean; delay?: number | null; days?: number | null; title?: string; text?: string };
+
+const popup = ((settings as { subscribe_popup?: Popup }).subscribe_popup ?? {}) as Popup;
+const links: Record<string, string> = settings.social ?? {};
+const networks = (
+  [
+    ['youtube', 'YouTube', t('subscribe')],
+    ['facebook', 'Facebook', t('follow')],
+    ['instagram', 'Instagram', t('follow')],
+  ] as const
+).filter(([key]) => links[key]);
+
+const show = popup.show === true && networks.length > 0;
+---
+
+{
+  show && (
+    <div
+      class="subpop"
+      data-subscribe-popup
+      data-delay={String(popup.delay ?? 6)}
+      data-days={String(popup.days ?? 7)}
+      hidden
+    >
+      <div class="subpop__box" role="dialog" aria-modal="true" aria-labelledby="subpop-title">
+        <button class="subpop__x" type="button" data-subscribe-close aria-label={t('popupLater')}>
+          ✕
+        </button>
+        <h2 class="subpop__title" id="subpop-title">
+          {popup.title?.trim() || t('popupTitle')}
+        </h2>
+        <p class="subpop__text">{popup.text?.trim() || t('popupText')}</p>
+        <div class="subpop__list">
+          {networks.map(([key, label, action]) => (
+            <a
+              class={`subpop__btn subpop__btn--${key}`}
+              href={links[key]}
+              target="_blank"
+              rel="noopener"
+              data-subscribe-go
+            >
+              <Icon name={key} size={20} />
+              <span>
+                {action} — {label}
+              </span>
+            </a>
+          ))}
+        </div>
+        <button class="subpop__later" type="button" data-subscribe-close>
+          {t('popupLater')}
+        </button>
+      </div>
+    </div>
+  )
+}

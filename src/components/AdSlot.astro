@@ -5,8 +5,8 @@
 import { t } from '../lib/i18n';
 import { asset } from '../lib/url';
 
-type Place = 'top' | 'home' | 'story' | 'sidebar' | 'bottom';
-type Ad = { name?: string; active?: boolean; placement?: string; order?: number | null; image?: string; link?: string; code?: string };
+type Place = 'top' | 'home' | 'story' | 'after-story' | 'sidebar' | 'bottom';
+type Ad = { name?: string; active?: boolean; placement?: string; order?: number | null; slide?: boolean; image?: string; link?: string; code?: string };
 
 interface Props {
   place: Place;
@@ -24,11 +24,19 @@ const ads = all
   .map((ad, i) => ({ ad, i, order: typeof ad.order === 'number' ? ad.order : Number.POSITIVE_INFINITY }))
   .sort((a, b) => a.order - b.order || a.i - b.i)
   .map(({ ad }) => ad);
+
+// "स्लाइड शो" on any ad in this place turns the whole place into one rotating slide (site.ts runs it).
+const slide = ads.length > 1 && ads.some((ad) => ad.slide);
 ---
 
 {
   ads.length > 0 && (
-    <aside class:list={['ad-slot', `ad-slot--${place}`, className]} aria-label={t('advertisement')} data-pagefind-ignore>
+    <aside
+      class:list={['ad-slot', `ad-slot--${place}`, { 'ad-slot--slide': slide }, className]}
+      aria-label={t('advertisement')}
+      data-slide={slide ? '' : undefined}
+      data-pagefind-ignore
+    >
       {ads.map((ad) => (
         <div class="ad">
           <span class="ad__label">{t('advertisement')}</span>

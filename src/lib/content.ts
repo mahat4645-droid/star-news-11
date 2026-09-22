@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import settings from '../data/settings.json';
+import { facebookUrl } from './facebook';
 import { url } from './url';
 
 export { settings };
@@ -62,20 +63,11 @@ export function youtubeId(input?: string | null): string | undefined {
   }
 }
 
-/** A Facebook video, reel or post link — used as the lead media when there is no YouTube link. */
-export function facebookUrl(input?: string | null): string | undefined {
-  if (!input) return;
-  try {
-    const u = new URL(input.trim());
-    return /(^|\.)(facebook\.com|fb\.watch|fb\.me)$/.test(u.hostname) ? u.href : undefined;
-  } catch {
-    return;
-  }
-}
-
 /** True for stories that lead with a video (YouTube or Facebook) — they appear on the Videos page. */
 export const hasVideo = (data: { youtube?: string | null; facebook?: string | null }): boolean =>
   !!youtubeId(data.youtube) || !!facebookUrl(data.facebook);
+
+export { facebookUrl, resolveFacebookUrl } from './facebook';
 
 /* ------------------------------------------------------------- taxonomies */
 

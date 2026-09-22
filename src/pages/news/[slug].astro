@@ -14,7 +14,7 @@ import {
   readingTime,
   settings,
   youtubeId,
-  facebookUrl,
+  resolveFacebookUrl,
   type Article,
 } from '../../lib/content';
 
@@ -31,7 +31,7 @@ const parentCategory = category.parent ? await getCategory(category.parent) : un
 
 const cover = coverOf(article);
 const videoId = youtubeId(data.youtube);
-const fbVideo = videoId ? undefined : facebookUrl(data.facebook);
+const fbVideo = videoId ? undefined : await resolveFacebookUrl(data.facebook);
 const pageUrl = new URL(articleUrl(article), Astro.site).href;
 const description = excerptOf(article, 200);
 

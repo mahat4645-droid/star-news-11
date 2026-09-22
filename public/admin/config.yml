@@ -310,6 +310,17 @@ collections:
                 widget: string
                 required: false
                 hint: Google Cloud से मुफ़्त "YouTube Data API v3" key। यह key साइट के कोड में दिखती है, इसलिए Google में इसे अपनी वेबसाइट तक सीमित (HTTP referrer) ज़रूर करें।
+          - label: फॉलो करने का पॉपअप (Subscribe popup)
+            name: subscribe_popup
+            widget: object
+            collapsed: true
+            hint: वेबसाइट खुलते ही पाठक से YouTube, Facebook और Instagram फॉलो करने को कहा जाएगा। चैनलों के लिंक ऊपर "सोशल मीडिया" में भरे होने चाहिए।
+            fields:
+              - { label: पॉपअप दिखाएं, name: show, widget: boolean, default: false }
+              - { label: कितने सेकंड बाद दिखे, name: delay, widget: number, default: 6, value_type: int, min: 0, max: 60, hint: 'पेज खुलने के कितने सेकंड बाद — 5 से 8 ठीक रहता है।' }
+              - { label: बंद करने के बाद कितने दिन न दिखे, name: days, widget: number, default: 7, value_type: int, min: 1, max: 90, hint: 'पाठक एक बार बंद कर दे तो इतने दिन दोबारा नहीं दिखेगा।' }
+              - { label: पॉपअप का शीर्षक, name: title, widget: string, required: false, hint: 'खाली छोड़ेंगे तो "हमसे जुड़े रहिए" दिखेगा।' }
+              - { label: पॉपअप की लाइन, name: text, widget: string, required: false, hint: 'खाली छोड़ेंगे तो "ताज़ा खबरों के लिए हमारे चैनल फॉलो कीजिए।" दिखेगा।' }
           - label: साइट का पता (Site URL)
             name: site_url
             widget: string
@@ -368,6 +379,7 @@ collections:
                   - { label: 'सबसे ऊपर — हर पेज पर हेडर के नीचे', value: top }
                   - { label: 'होम पेज — खबरों के बीच', value: home }
                   - { label: 'हर खबर के अंदर — फोटो के नीचे', value: story }
+                  - { label: 'खबर के नीचे — पूरी खबर पढ़ने के बाद', value: after-story }
                   - { label: 'साइडबार — कंप्यूटर पर दाईं ओर, मोबाइल पर नीचे', value: sidebar }
                   - { label: 'सबसे नीचे — फुटर के ऊपर', value: bottom }
               - label: क्रम (Order)
@@ -377,6 +389,12 @@ collections:
                 value_type: int
                 min: 1
                 hint: एक ही जगह पर कई विज्ञापन हों तो कौन पहले दिखे — 1 सबसे ऊपर, फिर 2, 3। खाली छोड़ेंगे तो सबसे नीचे।
+              - label: स्लाइड शो में दिखाएं (Slide show)
+                name: slide
+                widget: boolean
+                default: false
+                required: false
+                hint: एक ही जगह के विज्ञापन एक के नीचे एक दिखने के बजाय बारी-बारी (हर 5 सेकंड में) बदलते रहेंगे। उस जगह के किसी एक विज्ञापन में चालू करना काफ़ी है।
               - { label: विज्ञापन की फोटो (Ad image), name: image, widget: image, required: false, hint: 'कोई भी आकार। चौड़ाई अपने-आप फिट हो जाती है।' }
               - { label: क्लिक करने पर कहां जाए (Link), name: link, widget: string, required: false, hint: 'e.g. https://wa.me/919000000000 या दुकान की वेबसाइट। खाली छोड़ सकते हैं।' }
               - { label: विज्ञापन कोड — Google AdSense आदि (Ad code), name: code, widget: text, required: false, hint: 'फोटो की जगह किसी विज्ञापन कंपनी का HTML कोड। ज़्यादातर लोग इसे खाली छोड़ें।' }
