@@ -10,7 +10,7 @@ cover: 568641.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
+youtube: https://youtu.be/0XqezMNNtlA?si=ODFoB8vErNJ-0pzQ
 facebook: https://www.facebook.com/share/v/1AtXwvvdSv/
 tags:
   - अमरोहा प्रकरण
