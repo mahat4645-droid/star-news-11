@@ -10,7 +10,7 @@ cover: 567019.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
+youtube: https://youtu.be/etiDvaeB1So?si=XHGrgZR0NZsVkGYi
 facebook: https://www.facebook.com/share/v/19RJDczpJd/
 tags:
   - बिजली विभाग की आकस्मिक रोस्टिंग
