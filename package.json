@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "node scripts/fix-missing-images.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "icons": "node scripts/app-icons.mjs",
     "new-client": "node scripts/new-client.mjs",
