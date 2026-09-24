@@ -22,6 +22,13 @@
     "youtube_channel": "",
     "youtube_api_key": ""
   },
+  "subscribe_popup": {
+    "show": false,
+    "delay": 6,
+    "days": 7,
+    "title": "",
+    "text": ""
+  },
   "site_url": "https://star-news-11.pages.dev",
   "locale": "hi-IN",
   "timezone": "Asia/Kolkata",
@@ -30,7 +37,7 @@
   "ticker_label": "ब्रेकिंग",
   "whatsapp_channel": "https://chat.whatsapp.com/IJszgoZ6onV3MkrZipcqVB?s=cl&p=a&mlu=4&ilr=4",
   "telegram_channel": "",
-  "auto_delete_days": 15,
+  "auto_delete_days": 0,
   "app": {
     "play_store": "",
     "app_store": "",
