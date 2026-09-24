@@ -79,6 +79,36 @@
       "image": "/uploads/540730.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "दानिश गौड",
+      "active": true,
+      "placement": "top",
+      "order": 4,
+      "slide": true,
+      "image": "/uploads/540730.webp",
+      "link": "",
+      "code": ""
+    },
+    {
+      "name": "नगर निगम रूडकी",
+      "active": true,
+      "placement": "top",
+      "order": 5,
+      "slide": true,
+      "image": "/uploads/540770.webp",
+      "link": "",
+      "code": ""
+    },
+    {
+      "name": "नगर पंचायत झबरेड़ा",
+      "active": true,
+      "placement": "top",
+      "order": null,
+      "slide": true,
+      "image": "/uploads/542211.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
