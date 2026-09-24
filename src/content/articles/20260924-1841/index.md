@@ -11,7 +11,7 @@ cover_alt: ''
 cover_caption: ''
 photos: []
 youtube: ''
-facebook: ''
+facebook: https://www.facebook.com/share/v/19RJDczpJd/
 tags:
   - बिजली विभाग की आकस्मिक रोस्टिंग
 featured: true
