@@ -13,7 +13,7 @@
     {
       "name": "सचिन गुप्ता पूजा गुप्ता",
       "active": true,
-      "placement": "home",
+      "placement": "top",
       "order": null,
       "slide": true,
       "image": "/uploads/540693.webp",
@@ -25,7 +25,7 @@
       "active": true,
       "placement": "home",
       "order": 5,
-      "slide": false,
+      "slide": true,
       "image": "/uploads/542211.webp",
       "link": "",
       "code": ""
