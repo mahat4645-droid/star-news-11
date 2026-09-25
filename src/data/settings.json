@@ -24,7 +24,7 @@
   },
   "subscribe_popup": {
     "show": true,
-    "delay": 6,
+    "delay": 10,
     "days": 7,
     "title": "",
     "text": ""
