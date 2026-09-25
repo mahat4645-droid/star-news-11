@@ -23,7 +23,7 @@
     "youtube_api_key": ""
   },
   "subscribe_popup": {
-    "show": false,
+    "show": true,
     "delay": 6,
     "days": 7,
     "title": "",
