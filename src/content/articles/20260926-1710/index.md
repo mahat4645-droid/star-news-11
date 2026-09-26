@@ -12,7 +12,7 @@ cover_caption: ''
 photos:
   - image: 578325.webp
     caption: ''
-youtube: ''
+youtube: https://youtu.be/qcaSoGOlROE?si=Vti-MQXXAe8D58De
 facebook: https://www.facebook.com/share/v/1GhitjzWLf/
 tags: []
 featured: true
