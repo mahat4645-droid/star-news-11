@@ -8,7 +8,7 @@ cover: 584369.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
+youtube: https://youtu.be/Z6LZQU_o10U?si=jVql0lkrFKmItR7s
 facebook: https://www.facebook.com/share/v/1JcCkT3H4p/
 tags: []
 featured: true
