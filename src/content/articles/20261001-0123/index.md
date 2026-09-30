@@ -4,7 +4,7 @@ excerpt: झबरेड़ा विधायक वीरेंद्र ज�
 category: manoranjan
 author: ''
 date: 2026-09-30T19:48:00Z
-cover: 600611.webp
+cover: ''
 cover_alt: ''
 cover_caption: ''
 photos: []
