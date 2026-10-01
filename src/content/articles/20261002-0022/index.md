@@ -4,7 +4,7 @@ excerpt: कन्हैया लाल पॉलीटेक्निक म�
 category: madhya-pradesh
 author: ''
 date: 2026-10-01T18:50:00Z
-cover: 605072.webp
+cover: ''
 cover_alt: ''
 cover_caption: ''
 photos: []
