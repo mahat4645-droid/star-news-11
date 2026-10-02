@@ -119,6 +119,16 @@
       "image": "/uploads/600261.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "शौकीन",
+      "active": true,
+      "placement": "top",
+      "order": null,
+      "slide": true,
+      "image": "/uploads/608866.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
