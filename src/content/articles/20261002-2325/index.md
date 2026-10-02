@@ -8,7 +8,7 @@ cover: 611027.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: https://youtube.com/shorts/smhAdYc3kC4?si=fP6bWSl0BvShfYux
+youtube: https://youtu.be/F63OmYibTig?si=bsIzdFQdDVhusz7F
 facebook: https://www.facebook.com/share/v/19YGFhTCvT/
 tags: []
 featured: true
@@ -23,7 +23,7 @@ draft: false
 
 अभियान की खास बात यह रही कि उद्यमी सौरभ सैनी स्वयं हाथ में झाड़ू लेकर रविदास घाट पर सफाई करने उतरे। उन्होंने सार्वजनिक स्थल पर झाड़ू लगाकर लोगों को स्वच्छता के प्रति जिम्मेदारी निभाने का संदेश दिया। उनके इस कदम को देखकर अभियान में शामिल लोगों के साथ स्थानीय नागरिकों में भी जागरूकता देखने को मिली।
 
-<div class="yt-embed" data-yt="F63OmYibTig"></div>
+<div class="fb-embed" data-url="https://www.facebook.com/share/v/19YGFhTCvT/"></div>
 
 सौरभ सैनी ने कहा कि साफ शहर केवल व्यवस्था से नहीं, बल्कि नागरिकों की सोच और सहभागिता से बनता है। सार्वजनिक स्थानों पर कूड़ा डालकर हम अपने ही शहर के वातावरण को खराब करते हैं। उन्होंने लोगों से अपील की कि घर और दुकान का कूड़ा निर्धारित स्थान पर ही डालें और सड़क, नाली अथवा सार्वजनिक स्थलों को कूड़ेदान न बनाएं।
 
