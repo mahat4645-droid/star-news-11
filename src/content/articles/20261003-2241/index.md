@@ -4,7 +4,7 @@ excerpt: आर्य कन्या गर्ल्स इंटर कॉल�
 category: madhya-pradesh
 author: ''
 date: 2026-10-03T17:06:00Z
-cover: 615756.webp
+cover: 615764.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
