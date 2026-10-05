@@ -6,7 +6,7 @@ excerpt: |-
 category: uttarakhand-haridwar
 author: ''
 date: 2026-10-05T14:05:00Z
-cover: 625809.webp
+cover: 626009.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
