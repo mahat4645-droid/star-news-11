@@ -13,7 +13,8 @@ cover_caption: ''
 photos: []
 youtube: ''
 facebook: ''
-tags: []
+tags:
+  - खेल महाकुम्भ
 featured: true
 breaking: true
 draft: false
