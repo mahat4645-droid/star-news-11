@@ -126,7 +126,7 @@
       "placement": "top",
       "order": 2,
       "slide": true,
-      "image": "/uploads/608866.webp",
+      "image": "/uploads/663556.webp",
       "link": "",
       "code": ""
     },
@@ -137,6 +137,16 @@
       "order": 8,
       "slide": true,
       "image": "/uploads/600261.webp",
+      "link": "",
+      "code": ""
+    },
+    {
+      "name": "शौकीन",
+      "active": true,
+      "placement": "top",
+      "order": 9,
+      "slide": true,
+      "image": "/uploads/608866.webp",
       "link": "",
       "code": ""
     }
