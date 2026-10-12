@@ -129,6 +129,16 @@
       "image": "/uploads/608866.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "Barak ah",
+      "active": true,
+      "placement": "top",
+      "order": 8,
+      "slide": true,
+      "image": "/uploads/600261.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
