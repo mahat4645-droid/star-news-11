@@ -149,6 +149,16 @@
       "image": "/uploads/608866.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "अनिल",
+      "active": true,
+      "placement": "story",
+      "order": 2,
+      "slide": true,
+      "image": "/uploads/666968.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
