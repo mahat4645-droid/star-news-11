@@ -8,8 +8,8 @@ cover: 685336.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
-facebook: ''
+youtube: https://youtu.be/2pYodUsOR1c?si=iQ8VWoxRJN-2if-v
+facebook: https://www.facebook.com/share/v/1CLNy8guAG/
 tags: []
 featured: true
 breaking: true
