@@ -11,8 +11,8 @@ cover: 689186.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
-facebook: ''
+youtube: https://youtu.be/IgOOhOdQSug?si=Ooa1bcN8pwVZ-U13
+facebook: https://www.facebook.com/share/v/1EisyQiKmg/
 tags: []
 featured: true
 breaking: true
