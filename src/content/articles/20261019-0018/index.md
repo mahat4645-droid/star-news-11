@@ -10,7 +10,8 @@ cover_caption: ''
 photos: []
 youtube: ''
 facebook: ''
-tags: []
+tags:
+  - फर्जी अस्पताल
 featured: true
 breaking: true
 draft: false
