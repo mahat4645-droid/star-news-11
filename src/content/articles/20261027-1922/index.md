@@ -15,7 +15,7 @@ facebook: ''
 tags: []
 featured: true
 breaking: true
-draft: false
+draft: true
 ---
 
 **हरिद्वार/रूडकी संवाददाता | आसिफ खान** 
