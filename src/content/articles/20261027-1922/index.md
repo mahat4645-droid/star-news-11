@@ -11,7 +11,7 @@ photos: []
 youtube: ''
 facebook: ''
 tags: []
-featured: true
+featured: false
 breaking: true
 draft: true
 ---
