@@ -156,6 +156,16 @@
       "placement": "story",
       "order": 2,
       "slide": true,
+      "image": "/uploads/745702.webp",
+      "link": "",
+      "code": ""
+    },
+    {
+      "name": "Anil",
+      "active": true,
+      "placement": "story",
+      "order": 3,
+      "slide": true,
       "image": "/uploads/666968.webp",
       "link": "",
       "code": ""
