@@ -8,7 +8,7 @@ cover: 751013.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
+youtube: https://youtu.be/vQbRCd5gA5E?si=AO7bp6CSbD0uDGN5
 facebook: ''
 tags:
   - करवा चौथ
