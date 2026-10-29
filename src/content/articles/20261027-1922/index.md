@@ -19,7 +19,7 @@ facebook: ''
 tags: []
 featured: true
 breaking: true
-draft: true
+draft: false
 ---
 
 **हरिद्वार/रूडकी संवाददाता | आसिफ खान** 
