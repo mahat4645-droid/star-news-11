@@ -7,7 +7,7 @@ excerpt: |-
   , 
   ,
   ,,,,,,,,,,,,
-category: uttarakhand-haridwar
+category: madhya-pradesh
 author: ''
 date: 2026-10-27T13:50:00Z
 cover: ''
