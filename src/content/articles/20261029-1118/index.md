@@ -9,7 +9,7 @@ cover_alt: ''
 cover_caption: ''
 photos: []
 youtube: https://youtu.be/vQbRCd5gA5E?si=AO7bp6CSbD0uDGN5
-facebook: ''
+facebook: https://www.facebook.com/share/v/1ELE2V1DAj/
 tags:
   - करवा चौथ
 featured: true
