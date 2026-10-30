@@ -10,7 +10,7 @@ cover: 756308.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
-youtube: ''
+youtube: https://youtu.be/lQU6V1-KMp4?si=WOrereiAlbANmRfY
 facebook: https://www.facebook.com/share/v/19EA9kxGjY/
 tags: []
 featured: true
