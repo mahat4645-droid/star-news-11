@@ -4,7 +4,7 @@ excerpt: होटल ऑल सीजन में महक सिंह क�
 category: madhya-pradesh
 author: ''
 date: 2026-11-07T09:21:00Z
-cover: 797963.webp
+cover: 797996.webp
 cover_alt: ''
 cover_caption: ''
 photos: []
