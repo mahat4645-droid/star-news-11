@@ -41,16 +41,6 @@
       "code": ""
     },
     {
-      "name": "सचिन गुप्ता पूजा गुप्ता",
-      "active": true,
-      "placement": "top",
-      "order": 7,
-      "slide": true,
-      "image": "/uploads/540765.webp",
-      "link": "",
-      "code": ""
-    },
-    {
       "name": "नगर पंचायत झबरेड़ा",
       "active": true,
       "placement": "bottom",
@@ -75,16 +65,6 @@
       "active": true,
       "placement": "sidebar",
       "order": 5,
-      "slide": true,
-      "image": "/uploads/540730.webp",
-      "link": "",
-      "code": ""
-    },
-    {
-      "name": "दानिश गौड",
-      "active": true,
-      "placement": "top",
-      "order": 4,
       "slide": true,
       "image": "/uploads/540730.webp",
       "link": "",
@@ -127,16 +107,6 @@
       "order": 2,
       "slide": true,
       "image": "/uploads/804810.webp",
-      "link": "",
-      "code": ""
-    },
-    {
-      "name": "शौकीन",
-      "active": true,
-      "placement": "top",
-      "order": 9,
-      "slide": true,
-      "image": "/uploads/608866.webp",
       "link": "",
       "code": ""
     },
