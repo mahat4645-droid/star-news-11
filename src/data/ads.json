@@ -159,6 +159,16 @@
       "image": "/uploads/745702.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "Anil Architect",
+      "active": true,
+      "placement": "top",
+      "order": 4,
+      "slide": true,
+      "image": "/uploads/805513.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
