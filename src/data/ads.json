@@ -16,7 +16,7 @@
       "placement": "top",
       "order": 3,
       "slide": true,
-      "image": "/uploads/662855.webp",
+      "image": "/uploads/804915.webp",
       "link": "",
       "code": ""
     },
@@ -116,27 +116,17 @@
       "placement": "top",
       "order": 1,
       "slide": true,
-      "image": "/uploads/804810.webp",
+      "image": "/uploads/805435.webp",
       "link": "",
       "code": ""
     },
     {
-      "name": "शौकीन",
+      "name": "गौरव गोयल",
       "active": true,
       "placement": "top",
       "order": 2,
       "slide": true,
-      "image": "/uploads/804915.webp",
-      "link": "",
-      "code": ""
-    },
-    {
-      "name": "Barak ah",
-      "active": true,
-      "placement": "top",
-      "order": 8,
-      "slide": true,
-      "image": "/uploads/600261.webp",
+      "image": "/uploads/804810.webp",
       "link": "",
       "code": ""
     },
