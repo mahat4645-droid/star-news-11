@@ -4,7 +4,7 @@
       "name": "स्टार न्यूज़ 11 न्यूज़ नेटवर्क ग्रुप",
       "active": true,
       "placement": "story",
-      "order": 2,
+      "order": 3,
       "slide": true,
       "image": "/uploads/805493.webp",
       "link": "",
@@ -114,7 +114,7 @@
       "name": "अक्षय",
       "active": true,
       "placement": "story",
-      "order": 1,
+      "order": 2,
       "slide": true,
       "image": "/uploads/804998.webp",
       "link": "",
@@ -124,7 +124,7 @@
       "name": "Anil",
       "active": true,
       "placement": "story",
-      "order": 3,
+      "order": 4,
       "slide": true,
       "image": "/uploads/745702.webp",
       "link": "",
@@ -137,6 +137,16 @@
       "order": 4,
       "slide": true,
       "image": "/uploads/805513.webp",
+      "link": "",
+      "code": ""
+    },
+    {
+      "name": "चैरब जैन",
+      "active": true,
+      "placement": "top",
+      "order": 1,
+      "slide": true,
+      "image": "/uploads/810988.webp",
       "link": "",
       "code": ""
     }
