@@ -149,6 +149,16 @@
       "image": "/uploads/810988.webp",
       "link": "",
       "code": ""
+    },
+    {
+      "name": "1",
+      "active": true,
+      "placement": "top",
+      "order": 1,
+      "slide": true,
+      "image": "/uploads/810998.webp",
+      "link": "",
+      "code": ""
     }
   ]
 }
